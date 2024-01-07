@@ -6,3 +6,11 @@ website:
     left:
       - text: Overview
         href: index.qmd
+        
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+    linkcolor: rgb(0, 153, 255)
+    toc: true

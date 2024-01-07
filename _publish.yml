@@ -1,0 +1,4 @@
+- source: project
+  netlify:
+    - id: e03b7723-cd3e-4230-b477-2b184eb86a8f
+      url: 'https://is415-chihao-journey.netlify.app/'

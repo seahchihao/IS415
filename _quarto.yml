@@ -7,7 +7,10 @@ website:
       left:
         - text: Overview
           href: index.qmd
-        
+        - text: Hands-On Exercise
+          menu:
+            - text: Hands-On Exercise 1
+              href: hoe1.qmd
 format:
   html:
     theme:

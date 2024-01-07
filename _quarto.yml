@@ -1,5 +1,8 @@
 project:
-  title: "IS415"
+  type: website
 
-editor: visual
-
+website:
+    title: "IS415 Journey" 
+    left:
+      - text: Overview
+        href: index.qmd

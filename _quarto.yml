@@ -11,6 +11,15 @@ website:
           menu:
             - text: Hands-On Exercise 1
               href: hoe1.qmd
+        - text: In-Class Exercise
+          menu:
+            - text: In-Class Exercise 1
+              href: ice1.qmd
+        - text: Take-Home Exercise
+          menu:
+            - text: Take-Home Exercise 1
+              href: the1.qmd
+              
 format:
   html:
     theme:

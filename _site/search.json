@@ -12,5 +12,54 @@
     "title": "IS415 - Chi Hao",
     "section": "",
     "text": "This is my IS415 Journey"
+  },
+  {
+    "objectID": "hoe1.html",
+    "href": "hoe1.html",
+    "title": "Hands-On Exercise 1",
+    "section": "",
+    "text": "1.0 Overview\n2.0 Setup\n2.1 Packages Used\n2.2 Data Used\n2.3 Geospatial Data Importing + Wrangling\n2.4 Apatial Data Importing + Wrangling\n3.0"
+  },
+  {
+    "objectID": "hoe1.html#packages-used",
+    "href": "hoe1.html#packages-used",
+    "title": "Hands-On Exercise 1",
+    "section": "2.1 Packages Used",
+    "text": "2.1 Packages Used"
+  },
+  {
+    "objectID": "hoe1.html#data-used",
+    "href": "hoe1.html#data-used",
+    "title": "Hands-On Exercise 1",
+    "section": "2.2 Data Used",
+    "text": "2.2 Data Used"
+  },
+  {
+    "objectID": "hoe1.html#geospatial-data-importing-wrangling",
+    "href": "hoe1.html#geospatial-data-importing-wrangling",
+    "title": "Hands-On Exercise 1",
+    "section": "2.3 Geospatial Data Importing + Wrangling",
+    "text": "2.3 Geospatial Data Importing + Wrangling"
+  },
+  {
+    "objectID": "hoe1.html#apatial-data-importing-wrangling",
+    "href": "hoe1.html#apatial-data-importing-wrangling",
+    "title": "Hands-On Exercise 1",
+    "section": "2.4 Apatial Data Importing + Wrangling",
+    "text": "2.4 Apatial Data Importing + Wrangling"
+  },
+  {
+    "objectID": "hoe1.html#setup",
+    "href": "hoe1.html#setup",
+    "title": "Hands-On Exercise 1",
+    "section": "2.0 Setup",
+    "text": "2.0 Setup\n\n2.1 Packages Used\n\n\n2.2 Data Used\n\n\n2.3 Geospatial Data Importing + Wrangling\n\n\n2.4 Apatial Data Importing + Wrangling"
+  },
+  {
+    "objectID": "hoe1.html#section",
+    "href": "hoe1.html#section",
+    "title": "Hands-On Exercise 1",
+    "section": "3.0",
+    "text": "3.0"
   }
 ]

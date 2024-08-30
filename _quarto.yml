@@ -8,7 +8,7 @@ website:
     title: "Chi Hao's IS415 Journey" 
     left:
       - text: Overview
-        href: index.qmd #reference to HTML file instead of qmd
+        href: index.html #reference to HTML file instead of qmd
       - text: Hands-On Exercise
         menu:
           - text: Hands-On Exercise 1

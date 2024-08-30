@@ -1,0 +1,89 @@
+---
+title: "In-Class Exercise 02"
+author: "Seah Chi Hao"
+date: 2024-08-26
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  freeze: true
+  output: true
+  warning: false
+
+---
+
+### The Code
+
+::: {style="font-size: 1.50em"}
+This code chunk imports shapefile.
+
+```{r}
+pacman::p_load(tidyverse, sf, ggstatsplot, tmap)
+```
+
+```{r}
+pacman::p_load(tidyverse, sf) # wrapper of basic R function (similar to importing package)
+
+# "=" also works but "<-" works for both windows and linux
+mpsz14_shp <- st_read(dsn = "data/",
+                      layer = "MP14_SUBZONE_WEB_PL")
+```
+This code chunk imports kml file.
+
+```{r}
+#| eval: false
+mpsz14_kml <- st_read("data/MasterPlan2014SubzoneBoundaryWebKML.kml")
+# it did not work, if want kml can generate kml from shp (see below)
+```
+
+```{r}
+#| output: false
+st_write(mpsz14_shp,
+         "data/MP14_SUBZONE_WEB_PL.kml", #able to write from shp to kml/geojson
+         delete_dsn = TRUE) # this part not necessary BUT make sure delete original file before running (aka remove duplicates/dataset that already exist)
+```
+
+:::
+:::
+
+## Working with Master Plan 2019 Subzone Boundary Data
+```{r}
+mpsz19_shp <- st_read(dsn = "data/MPSZ-2019",
+                      layer = "MPSZ-2019")
+```
+
+```{r}
+#| eval: false
+mpsz19_kml <- st_read("data/MasterPlan2019SubzoneBoundaryNoSeaKML.kml")
+```
+```{r}
+mpsz19_shp <- st_read(dsn = "data/MPSZ-2019",
+                      layer = "MPSZ-2019") %>%
+  st_transform(crs = 3414)
+```
+
+{r}
+# python use panda (a package for data analytics), R use tidyverse (family of packages for data analytics)
+popdata2023 <- popdata %>%
+  group_by(PA, SZ, AG) %>%
+  summarise('POP'=sum('Pop')) %>%
+  ungroup() %>%
+  pivot_wider(names_from=AG,
+              values_from = POP)
+
+colnames(popdata2023)
+
+
+{r}
+popdata2023 <- popdata2023 %>%
+  group_by(PA, SZ, AG) %>%
+  summarise('POP'=sum('Pop'))
+
+
+{r}
+mpsz_pop2023 <- left_join(mpsz19_shp, popdata2023,
+                          by = c("SUBZONE_N" = "SZ"))
+
+
+::: panel-tabset
+### The task

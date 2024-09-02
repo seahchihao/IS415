@@ -43,3 +43,13 @@ sg_sf <- mpsz_sf %>%
   st_union()
 ```
 
+## 3.0 Read Myanmar data
+
+```{r}
+acled_sf <- read_csv("data/ACLED_Myanmar.csv") %>%
+  st_as_sf(coords = c(
+    "longitude", "latitude"),
+    crs=4326) %>%
+  st_transform(crs = 32647) %>%
+  mutate(event_date = dmy(event_date))
+```

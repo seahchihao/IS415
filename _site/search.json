@@ -362,5 +362,12 @@
     "title": "In-Class Exercise 03",
     "section": "2.0 Creating costal outline",
     "text": "2.0 Creating costal outline\n\n2.1 Working with st_union()\nThe code chunk below, st_union() is used to derive the costal outline sf tibble data.frame.\n\nmpsz_sf &lt;- st_read(dsn = \"data\", \n                layer = \"MP14_SUBZONE_WEB_PL\")\n\nReading layer `MP14_SUBZONE_WEB_PL' from data source \n  `C:\\Users\\0seah\\SMU\\AY24-25 T1\\IS415\\IS415\\In-Class_Ex\\In-Class_Ex03\\data' \n  using driver `ESRI Shapefile'\nSimple feature collection with 323 features and 15 fields\nGeometry type: MULTIPOLYGON\nDimension:     XY\nBounding box:  xmin: 2667.538 ymin: 15748.72 xmax: 56396.44 ymax: 50256.33\nProjected CRS: SVY21\n\nsg_sf &lt;- mpsz_sf %&gt;%\n  st_union()"
+  },
+  {
+    "objectID": "In-Class_Ex/In-Class_Ex03/ice03.html#read-myanmar-data",
+    "href": "In-Class_Ex/In-Class_Ex03/ice03.html#read-myanmar-data",
+    "title": "In-Class Exercise 03",
+    "section": "3.0 Read Myanmar data",
+    "text": "3.0 Read Myanmar data\n\nacled_sf &lt;- read_csv(\"data/ACLED_Myanmar.csv\") %&gt;%\n  st_as_sf(coords = c(\n    \"longitude\", \"latitude\"),\n    crs=4326) %&gt;%\n  st_transform(crs = 32647) %&gt;%\n  mutate(event_date = dmy(event_date))"
   }
 ]

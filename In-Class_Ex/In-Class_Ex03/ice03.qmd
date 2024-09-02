@@ -1,6 +1,5 @@
 ---
-title: "1st and 2nd Order Spatial Point Patterns Analysis Methods"
-subtitle: "Hands-On Exercise 03"
+title: "In-Class Exercise 03"
 author: "Seah Chi Hao"
 date: 2024-09-02
 date-modified: "last-modified"
@@ -13,5 +12,34 @@ execute:
 
 ---
 
-## 1.0 Overview
+## 1.0 Installing maptools
+
+```{r}
+#| echo: false
+pacman::p_load(sf, raster, spatstat, tmap, tidyverse)
+```
+
+**maptools** is retired and binary is removed from CRAN. However, we can download from [Posit Public Package Manager](https://packagemanager.posit.co) snapshots by using the code chunk below.
+```{r}
+#| eval: false #so that this chunk won't keep running (add this when there is adhoc installation)
+#After the installation is complete, it is important to edit the code chunk to avoid maptools being downloaded and installed each time.
+#By adding "#| eval: false"
+install.packages("maptools",
+                 repos = "https://packagemanager.posit.co/cran/2023-10-13")
+```
+> Note: Need to know which version of package you want. Ususally use this method when it's not available in the achive of CRAN.
+
+> Note: Try not to use maptools since it is already deprecate.
+
+## 2.0 Creating costal outline
+
+### 2.1 Working with st_union()
+The code chunk below, `st_union()` is used to derive the costal outline sf tibble data.frame.
+
+```{r}
+mpsz_sf <- st_read(dsn = "data", 
+                layer = "MP14_SUBZONE_WEB_PL")
+sg_sf <- mpsz_sf %>%
+  st_union()
+```
 

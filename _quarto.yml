@@ -28,8 +28,8 @@ website:
             href: "In-Class_Ex/In-Class_Ex02/ice02.html"
           - text: In-Class Exercise 3
             href: "In-Class_Ex/In-Class_Ex03/ice03.html"
-          #- text: In-Class Exercise 4
-           # href: "In-Class_Ex/In-Class_Ex04/ice04.html"
+          - text: In-Class Exercise 4
+            href: "In-Class_Ex/In-Class_Ex04/ice04.html"
           #- text: In-Class Exercise 5
            # href: "In-Class_Ex/In-Class_Ex05/ice05.html"
 

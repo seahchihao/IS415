@@ -218,9 +218,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#exttracting-forest-fires-by-month" id="toc-exttracting-forest-fires-by-month" class="nav-link" data-scroll-target="#exttracting-forest-fires-by-month">6.1 Exttracting forest fires by month</a></li>
   <li><a href="#creating-ppp" id="toc-creating-ppp" class="nav-link" data-scroll-target="#creating-ppp">6.2 Creating ppp</a></li>
   <li><a href="#including-owin-object" id="toc-including-owin-object" class="nav-link" data-scroll-target="#including-owin-object">6.3 Including Owin object</a></li>
-  </ul></li>
-  <li><a href="#computing-spatio-temporal-kde" id="toc-computing-spatio-temporal-kde" class="nav-link" data-scroll-target="#computing-spatio-temporal-kde">6.4 Computing Spatio-temporal KDE</a>
-  <ul class="collapse">
+  <li><a href="#computing-spatio-temporal-kde" id="toc-computing-spatio-temporal-kde" class="nav-link" data-scroll-target="#computing-spatio-temporal-kde">6.4 Computing Spatio-temporal KDE</a></li>
   <li><a href="#plotting-the-spatio-temporal-kde-object" id="toc-plotting-the-spatio-temporal-kde-object" class="nav-link" data-scroll-target="#plotting-the-spatio-temporal-kde-object">6.5 Plotting the spatio-temporal KDE object</a></li>
   </ul></li>
   <li><a href="#computing-stkde-by-day-of-year" id="toc-computing-stkde-by-day-of-year" class="nav-link" data-scroll-target="#computing-stkde-by-day-of-year">7.0 Computing STKDE by Day of Year</a></li>
@@ -487,9 +485,8 @@ Fraction of frame area: 0.334</code></pre>
 </div>
 </div>
 </section>
-</section>
-<section id="computing-spatio-temporal-kde" class="level2">
-<h2 class="anchored" data-anchor-id="computing-spatio-temporal-kde">6.4 Computing Spatio-temporal KDE</h2>
+<section id="computing-spatio-temporal-kde" class="level3">
+<h3 class="anchored" data-anchor-id="computing-spatio-temporal-kde">6.4 Computing Spatio-temporal KDE</h3>
 <p>Next, <code>stattemo.density()</code> of sparr package is used to compute STKDE.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>st_kde <span class="ot">&lt;-</span> <span class="fu">spattemp.density</span>(fire_month_owin)</span>
@@ -519,6 +516,7 @@ Evaluation
 <blockquote class="blockquote">
 <p>Note: Refer back to the STKDE formula to better understand the values derived.</p>
 </blockquote>
+</section>
 <section id="plotting-the-spatio-temporal-kde-object" class="level3">
 <h3 class="anchored" data-anchor-id="plotting-the-spatio-temporal-kde-object">6.5 Plotting the spatio-temporal KDE object</h3>
 <p>In the code below, <code>plot()</code> of R base is used to the KDE between July 2023 - December 2023.</p>

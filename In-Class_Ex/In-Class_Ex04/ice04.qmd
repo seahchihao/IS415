@@ -138,7 +138,7 @@ fire_month_owin <- fire_month_ppp[kbb_owin]
 summary(fire_month_owin)
 ```
 
-## 6.4 Computing Spatio-temporal KDE
+### 6.4 Computing Spatio-temporal KDE
 Next, `stattemo.density()` of sparr package is used to compute STKDE.
 ```{r}
 st_kde <- spattemp.density(fire_month_owin)

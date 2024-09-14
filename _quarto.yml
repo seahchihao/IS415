@@ -17,10 +17,8 @@ website:
             href: "Hands-On_Ex/Hands-On_Ex02/hoe02.html"
           - text: Hands-On Exercise 3
             href: "Hands-On_Ex/Hands-On_Ex03/hoe03.html"    
-          #- text: Hands-On Exercise 4
-            #href: "Hands-On_Ex/Hands-On_Ex04/hoe04.html"
-          #- text: Hands-On Exercise 5
-            #href: "Hands-On_Ex/Hands-On_Ex05/hoe05.html"   
+          - text: Hands-On Exercise 5
+            href: "Hands-On_Ex/Hands-On_Ex05/hoe05.html"   
 
       - text: In-Class Exercise
         menu:

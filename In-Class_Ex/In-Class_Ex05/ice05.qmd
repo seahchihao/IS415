@@ -1,0 +1,178 @@
+---
+title: "In-Class Exercise 05"
+author: "Seah Chi Hao"
+date: 2024-09-16
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  freeze: true
+  output: true
+  warning: false
+---
+
+## 1.0 Installing R package (GWmodel)
+
+On R Studio, on the *Tools* taskbar, install `GWmodel` package by searching for it under *Install Packages...*.
+
+## 2.0 Installing and Loading the R packages
+
+Install the following packages:
+
+-   sf
+-   spdep
+-   tmap
+-   tidyverse
+-   knitr
+-   GWmodel (case-sensitive)
+
+```{r}
+pacman::p_load(sf, spdep, tmap, tidyverse, knitr, GWmodel)
+```
+
+## 3.0 Preparing the Data
+
+-   Import Hunan shapefile and parse it into a sf polygon feature object.
+
+```{r}
+#| eval: false #so won't run this big dataset again
+hunan <- st_read(dsn = "data/geospatial", 
+                 layer = "Hunan") #good practice is to always transform the data into projection
+```
+
+-   Import Hunan_2012.csv file parse it into a tibble data.frame.
+
+```{r}
+#| eval: false #so won't run this big dataset again
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+```
+
+-   Join Hunan and Hunan_2012 data.frame
+
+```{r}
+#| eval: false #so won't run this big dataset again
+hunan_sf <- left_join(hunan,hunan2012)%>%
+# always check data when joining (including if there is alpha-case difference)
+    select(1:3, 7, 15, 16, 31, 32) #choose which column to retain for analysis (data tidying)
+```
+
+```{r}
+#| eval: false #so won't run this again
+write_rds(hunan_sf, "data/rds/hunan_sf.rds")
+# saving intermediate data, save as rds (tibble format)
+```
+
+```{r}
+#| echo: false #to hide this code chunk
+hunan_sf <- read_rds("data/rds/hunan_sf.rds")
+```
+
+## 4.0 Converting to SpatialPolygonDataFrame
+
+```{r}
+hunan_sp <- hunan_sf %>%
+  as_Spatial()
+```
+
+## 5.0 Geographically Weighted Summary Statistics with adaptive bandwidth
+
+### 5.1 Determine adative bandwidth
+
+AIC method
+
+```{r}
+bw_AIC <- bw.gwr(GDPPC ~ 1,
+                 data = hunan_sp,
+                 approach ="AIC",
+                 adaptive = TRUE,
+                 kernel = "bisquare",
+                 longlat = T)
+
+bw_AIC
+```
+
+Cross-validation method
+
+```{r}
+bw_CV <- bw.gwr(GDPPC ~ 1,
+                 data = hunan_sp,
+                 approach ="AIC",
+                 adaptive = TRUE,
+                 kernel = "bisquare",
+                 longlat = T)
+
+bw_CV
+```
+
+### 5.2 Determine fixed bandwidth \*\*(FIXED)\*\* 
+
+AIC method
+
+```{r}
+#| eval: false
+bw_AIC <- bw.gwr(GDPPC ~ 1,
+                 data = hunan_sp,
+                 approach ="AIC",
+                 adaptive = FALSE, #For fixed bandwidth change to false
+                 kernel = "bisquare",
+                 longlat = T)
+```
+
+Cross-validation method
+
+```{r}
+#| eval: false
+bw_CV <- bw.gwr(GDPPC ~ 1,
+                 data = hunan_sp,
+                 approach ="AIC",
+                 adaptive = FALSE, #For fixed bandwidth change to false
+                 kernel = "bisquare",
+                 longlat = T)
+```
+
+
+### 5.3 Computing Geographically weighted summary statistics
+
+```{r}
+gwstat <- gwss(data = hunan_sp,
+                vars = "GDPPC",
+                bw = bw_AIC, #use the adaptive version
+                kernel = "bisquare",
+                adaptive = TRUE,
+                longlat = T)
+```
+
+
+### 5.4 Preparing the output data
+
+Code chunk below is used to extract **SDF** data table from **gwss** object output from `gwss()`. It will be converted into data.frame by using `as.data.frame()`.
+```{r}
+gwstat_df <- as.data.frame(gwstat$SDF)
+```
+
+Next, `cbind()` is used to append the newly derived data.frame onto *hunan_sf* sf data.frame. 
+```{r}
+ hunan_gstat <- cbind(hunan_sf, gwstat_df)
+```
+
+### 5.5 visualising geographically weighted summary statistics
+
+```{r}
+tm_shape(hunan_gstat) +
+  tm_fill("GDPPC_LM",
+          n = 5,
+          style = "quantile") +
+  tm_borders(alpha = 0.5) +
+  tm_layout(main.title = "Distribution of geographically weighted mean",
+            main.title.position = "center",
+            main.title.size = 1.0,
+            legend.text.size = 0.6,
+            legend.height = 1.50,
+            legend.width = 1.50,
+            frame = TRUE)
+
+```
+
+
+
+

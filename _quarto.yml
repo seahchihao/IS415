@@ -18,8 +18,11 @@ website:
           - text: Hands-On Exercise 3
             href: "Hands-On_Ex/Hands-On_Ex03/hoe03.html"    
           - text: Hands-On Exercise 5
-            href: "Hands-On_Ex/Hands-On_Ex05/hoe05.html"   
-
+            href: "Hands-On_Ex/Hands-On_Ex05/hoe05.html"
+          - text: Hands-On Exercise 6a
+            href: "Hands-On_Ex/Hands-On_Ex06a/hoe06a.html"  
+          - text: Hands-On Exercise 6b
+            href: "Hands-On_Ex/Hands-On_Ex06b/hoe06b.html"
       - text: In-Class Exercise
         menu:
           - text: In-Class Exercise 2

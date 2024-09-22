@@ -240,15 +240,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#extracting-study-area" id="toc-extracting-study-area" class="nav-link" data-scroll-target="#extracting-study-area">4.2 Extracting study area</a></li>
   <li><a href="#kernel-density-estimation" id="toc-kernel-density-estimation" class="nav-link" data-scroll-target="#kernel-density-estimation">4.0 Kernel Density Estimation</a></li>
   </ul></li>
-  <li><a href="#second-order-spatial-point-patterns-analysis" id="toc-second-order-spatial-point-patterns-analysis" class="nav-link" data-scroll-target="#second-order-spatial-point-patterns-analysis">5.0 Second-order Spatial Point Patterns Analysis</a>
-  <ul class="collapse">
-  <li><a href="#shwebo-2" id="toc-shwebo-2" class="nav-link" data-scroll-target="#shwebo-2">Shwebo</a></li>
-  <li><a href="#yinmarbin-2" id="toc-yinmarbin-2" class="nav-link" data-scroll-target="#yinmarbin-2">Yinmarbin</a></li>
-  <li><a href="#monywa-2" id="toc-monywa-2" class="nav-link" data-scroll-target="#monywa-2">Monywa</a></li>
-  <li><a href="#kale-2" id="toc-kale-2" class="nav-link" data-scroll-target="#kale-2">Kale</a></li>
-  <li><a href="#sagaing-2" id="toc-sagaing-2" class="nav-link" data-scroll-target="#sagaing-2">Sagaing</a></li>
-  <li><a href="#katha-2" id="toc-katha-2" class="nav-link" data-scroll-target="#katha-2">Katha</a></li>
-  </ul></li>
+  <li><a href="#second-order-spatial-point-patterns-analysis" id="toc-second-order-spatial-point-patterns-analysis" class="nav-link" data-scroll-target="#second-order-spatial-point-patterns-analysis">5.0 Second-order Spatial Point Patterns Analysis</a></li>
   <li><a href="#possible-explanation-of-the-kde-and-2nd-order-spatial-point-patterns-analysis" id="toc-possible-explanation-of-the-kde-and-2nd-order-spatial-point-patterns-analysis" class="nav-link" data-scroll-target="#possible-explanation-of-the-kde-and-2nd-order-spatial-point-patterns-analysis">6.0 Possible explanation of the KDE and 2nd-Order Spatial Point Patterns Analysis</a></li>
   <li><a href="#spatio-temporal-point-patterns-analysis" id="toc-spatio-temporal-point-patterns-analysis" class="nav-link" data-scroll-target="#spatio-temporal-point-patterns-analysis">7.0 Spatio-Temporal Point Patterns Analysis</a>
   <ul class="collapse">
@@ -257,9 +249,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#visualising-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing-by-quarter" id="toc-visualising-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing-by-quarter" class="nav-link" data-scroll-target="#visualising-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing-by-quarter">7.3 Visualising Distribution of fatal conflicts associated with the Military Forces of Myanmar in Sagaing by quarter</a></li>
   <li><a href="#computing-stkde-by-quarter" id="toc-computing-stkde-by-quarter" class="nav-link" data-scroll-target="#computing-stkde-by-quarter">7.4 Computing STKDE by Quarter</a></li>
   <li><a href="#plotting-the-spatio-temporal-kde-object" id="toc-plotting-the-spatio-temporal-kde-object" class="nav-link" data-scroll-target="#plotting-the-spatio-temporal-kde-object">7.5 Plotting the spatio-temporal KDE object</a></li>
-  <li><a href="#possible-explanation-of-the-spatio-temporal-kde-and-2nd-order-spatial-point-patterns-analysis" id="toc-possible-explanation-of-the-spatio-temporal-kde-and-2nd-order-spatial-point-patterns-analysis" class="nav-link" data-scroll-target="#possible-explanation-of-the-spatio-temporal-kde-and-2nd-order-spatial-point-patterns-analysis">8.0 Possible explanation of the Spatio-temporal KDE and 2nd-Order Spatial Point Patterns Analysis</a></li>
-  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">9.0 Conclusion</a></li>
   </ul></li>
+  <li><a href="#possible-explanation-of-the-spatio-temporal-kde-and-2nd-order-spatial-point-patterns-analysis" id="toc-possible-explanation-of-the-spatio-temporal-kde-and-2nd-order-spatial-point-patterns-analysis" class="nav-link" data-scroll-target="#possible-explanation-of-the-spatio-temporal-kde-and-2nd-order-spatial-point-patterns-analysis">8.0 Possible explanation of the Spatio-temporal KDE and 2nd-Order Spatial Point Patterns Analysis</a></li>
+  <li><a href="#interactive-map-view" id="toc-interactive-map-view" class="nav-link" data-scroll-target="#interactive-map-view">9.0 Interactive Map View</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">10.0 Conclusion</a></li>
   </ul>
 </nav>
     </div>
@@ -929,10 +922,11 @@ Projected CRS: WGS 84 / UTM zone 47N
 <h2 class="anchored" data-anchor-id="second-order-spatial-point-patterns-analysis">5.0 Second-order Spatial Point Patterns Analysis</h2>
 <section id="analysing-spatial-point-process-using-g-function" class="level4">
 <h4 class="anchored" data-anchor-id="analysing-spatial-point-process-using-g-function">5.1 <strong>Analysing Spatial Point Process Using G-Function</strong></h4>
-<p><em>Gest()</em> of <strong>spatat</strong> package is used to compute G-function. ::: panel-tabset</p>
-</section>
-<section id="shwebo-2" class="level3">
-<h3 class="anchored" data-anchor-id="shwebo-2">Shwebo</h3>
+<p><em>Gest()</em> of <strong>spatat</strong> package is used to compute G-function.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true">Shwebo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false">Yinmarbin</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false">Monywa</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-4" role="tab" aria-controls="tabset-3-4" aria-selected="false">Kale</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-5" role="tab" aria-controls="tabset-3-5" aria-selected="false">Sagaing</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-6" role="tab" aria-controls="tabset-3-6" aria-selected="false">Katha</a></li></ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>G_shwebo <span class="ot">=</span> <span class="fu">Gest</span>(shwebo_ppp, <span class="at">correction =</span> <span class="st">"border"</span>)</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>G_shwebo.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(shwebo_ppp, Gest, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -966,9 +960,8 @@ Done.</code></pre>
 </div>
 </div>
 </div>
-</section>
-<section id="yinmarbin-2" class="level3">
-<h3 class="anchored" data-anchor-id="yinmarbin-2">Yinmarbin</h3>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>G_yinmarbin <span class="ot">=</span> <span class="fu">Gest</span>(yinmarbin_ppp, <span class="at">correction =</span> <span class="st">"border"</span>)</span>
 <span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>G_yinmarbin.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(yinmarbin_ppp, Gest, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1002,9 +995,8 @@ Done.</code></pre>
 </div>
 </div>
 </div>
-</section>
-<section id="monywa-2" class="level3">
-<h3 class="anchored" data-anchor-id="monywa-2">Monywa</h3>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>G_monywa <span class="ot">=</span> <span class="fu">Gest</span>(monywa_ppp, <span class="at">correction =</span> <span class="st">"border"</span>)</span>
 <span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>G_monywa.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(monywa_ppp, Gest, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1038,9 +1030,8 @@ Done.</code></pre>
 </div>
 </div>
 </div>
-</section>
-<section id="kale-2" class="level3">
-<h3 class="anchored" data-anchor-id="kale-2">Kale</h3>
+</div>
+<div id="tabset-3-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-4-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>G_kale <span class="ot">=</span> <span class="fu">Gest</span>(kale_ppp, <span class="at">correction =</span> <span class="st">"border"</span>)</span>
 <span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>G_kale.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(kale_ppp, Gest, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1074,9 +1065,8 @@ Done.</code></pre>
 </div>
 </div>
 </div>
-</section>
-<section id="sagaing-2" class="level3">
-<h3 class="anchored" data-anchor-id="sagaing-2">Sagaing</h3>
+</div>
+<div id="tabset-3-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-5-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>G_sagaing <span class="ot">=</span> <span class="fu">Gest</span>(sagaing_ppp, <span class="at">correction =</span> <span class="st">"border"</span>)</span>
 <span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>G_sagaing.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(sagaing_ppp, Gest, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1110,9 +1100,8 @@ Done.</code></pre>
 </div>
 </div>
 </div>
-</section>
-<section id="katha-2" class="level3">
-<h3 class="anchored" data-anchor-id="katha-2">Katha</h3>
+</div>
+<div id="tabset-3-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-6-tab">
 <div class="cell">
 <div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>G_katha <span class="ot">=</span> <span class="fu">Gest</span>(katha_ppp, <span class="at">correction =</span> <span class="st">"border"</span>)</span>
 <span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>G_katha.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(katha_ppp, Gest, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -1146,7 +1135,9 @@ Done.</code></pre>
 </div>
 </div>
 </div>
-<p>:::</p>
+</div>
+</div>
+</div>
 </section>
 </section>
 <section id="possible-explanation-of-the-kde-and-2nd-order-spatial-point-patterns-analysis" class="level2">
@@ -1275,15 +1266,15 @@ Window area = 1.38874e+11 square units</code></pre>
 <div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>sagaing_fatal_quarter_owin <span class="ot">&lt;-</span> sagaing_fatal_quarter_ppp_jit[sagaing_boundary_owin]</span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sagaing_fatal_quarter_owin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Marked planar point pattern:  3371 points
-Average intensity 3.590946e-08 points per square unit
+<pre><code>Marked planar point pattern:  3370 points
+Average intensity 3.589881e-08 points per square unit
 
 Coordinates are given to 15 decimal places
 
 marks are numeric, of type 'double'
 Summary:
    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-  1.000   4.000   7.000   6.696   9.000  12.000 
+    1.0     4.0     7.0     6.7     9.0    12.0 
 
 Window: polygonal boundary
 single connected closed polygon with 5882 vertices
@@ -1315,11 +1306,11 @@ Fraction of frame area: 0.45</code></pre>
 <pre><code>Spatiotemporal Kernel Density Estimate
 
 Bandwidths
-  h = 20481.58 (spatial)
+  h = 20477.74 (spatial)
   lambda = 0.0259 (temporal)
 
 No. of observations
-  3371 
+  3370 
 
 Spatial bound
   Type: polygonal
@@ -1330,7 +1321,7 @@ Temporal bound
 
 Evaluation
   128 x 128 x 12 trivariate lattice
-  Density range: [0, 2.16527e-10]</code></pre>
+  Density range: [0, 2.166249e-10]</code></pre>
 </div>
 </div>
 </section>
@@ -1362,21 +1353,25 @@ Evaluation
 </div>
 </div>
 </section>
-<section id="possible-explanation-of-the-spatio-temporal-kde-and-2nd-order-spatial-point-patterns-analysis" class="level3">
-<h3 class="anchored" data-anchor-id="possible-explanation-of-the-spatio-temporal-kde-and-2nd-order-spatial-point-patterns-analysis">8.0 Possible explanation of the Spatio-temporal KDE and 2nd-Order Spatial Point Patterns Analysis</h3>
+</section>
+<section id="possible-explanation-of-the-spatio-temporal-kde-and-2nd-order-spatial-point-patterns-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="possible-explanation-of-the-spatio-temporal-kde-and-2nd-order-spatial-point-patterns-analysis">8.0 Possible explanation of the Spatio-temporal KDE and 2nd-Order Spatial Point Patterns Analysis</h2>
 <p>Spatio-temporal KDE analysis indicates that, with the exception of 2021 Q2 and 2022 Q1, there is a consistent presence of fatal conflicts in the southern part of Sagaing State. Additionally, throughout the quarters, the majority of fatal conflicts occur along the border of Sagaing State, a finding also confirmed by static KDE analysis within the southern region.</p>
 <p>An intriguing observation is the generally lower intensity of fatal conflicts in Sagaing State during Q2 and Q3, with a more concentrated occurrence in Q1 and Q4. This pattern may be attributed to the timing of rice harvests, which typically take place in mid-October and March. If the hypothesis that the Myanmar Military Forces engage in conflicts to control agricultural lands is accurate, these seasonal variations in conflict intensity would align with the strategic importance of these periods for resource acquisition.</p>
 <p>Furthermore, the relatively lower density of fatal conflicts in Sagaing State during 2022 could be explained by the intensified military operations conducted by the Myanmar Military Forces against ethnic armed groups in neighboring regions and districts, such as Chin State that borders Sagaing State. This may have led to a shift in militant activity away from Sagaing State and towards these other areas.</p>
 </section>
-<section id="conclusion" class="level3">
-<h3 class="anchored" data-anchor-id="conclusion">9.0 Conclusion</h3>
+<section id="interactive-map-view" class="level2">
+<h2 class="anchored" data-anchor-id="interactive-map-view">9.0 Interactive Map View</h2>
+<p>tmap_mode(‘view’) tm_shape(sagaing_fatal_conflict_sf) + tm_dots() `</p>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">10.0 Conclusion</h2>
 <p>In conclusion, the spatio-temporal analysis of armed conflict in Myanmar, employing Kernel Density Estimation (KDE) and spatial point patterns analysis, offers a comprehensive understanding of the conflict’s complex dynamics. By examining the spatial distribution, temporal patterns, and underlying drivers, this study provides valuable insights for policymakers, humanitarian organisations, and peacebuilding initiatives.</p>
 <p>Although there is limited data available regarding the actual intention of parties in conflicts and wars, and sources that report about tensions can sometimes be very bias. Data and findings can help us to make educated guess as to what is happening. In this assignment, the findings underscore the multifaceted nature of the conflict, influenced by the military’s strategic objectives, resource considerations, and broader geopolitical factors. The ongoing civil war, characterised by displacement, humanitarian crises, and human rights violations, is a direct consequence of these underlying dynamics.</p>
 <p>KDE, through its visualisation capabilities, provides a visual representation of conflict intensity, aiding in identifying areas of high and low conflict risk. Spatial point patterns analysis, on the other hand, delves deeper into the underlying spatial and temporal dynamics, revealing patterns and trends that may not be immediately apparent.</p>
 <p>The combination of these methods offers a more comprehensive understanding of the conflict’s complexities, enabling policymakers to make informed decisions regarding resource allocation, conflict prevention strategies, and humanitarian interventions. By addressing the root causes of the conflict and promoting sustainable peace, it is possible to mitigate the suffering of millions affected by this ongoing crisis.</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->

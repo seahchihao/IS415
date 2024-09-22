@@ -488,15 +488,15 @@ plot(G_katha.csr)
 :::
 
 
-### 6.0 Possible explanation of the KDE and 2nd-Order Spatial Point Patterns Analysis
+## 6.0 Possible explanation of the KDE and 2nd-Order Spatial Point Patterns Analysis
 ![Figure 1: Map of Sagaing](picture/Sagaing_map.jpg){fig-align="center"}
-We can see that the regions with the highest fatal conflicts in Sagaing State are situated mainly towards south side of the state. All 6 of the study areas we analysed are at the south side of Sagaing State, that shows high fatal conflict occurrences that was associated to the Military Forces of Myanmar, which came at no surprise. 
+The regions with the highest fatal conflicts in Sagaing State are predominantly located in the southern part of the state. All six study areas analysed exhibited high occurrences of fatal conflicts associated with the Myanmar Military Forces, as expected.
 
-The South part of Sagaing State neighbor the Shan State, and both regions are filled with vasts agriculture land. In times of uncertainties and civil war, everyone would head to the source of food to ensure that they have enough food while their "enemy" has as little as possible.
+Sagaing State borders Shan State, and both regions are characterized by extensive agricultural lands. These fertile areas are likely a significant factor in the Myanmar Military Forces' presence in the southern part of Sagaing State. During times of uncertainty and civil war, controlling agricultural resources can provide a strategic advantage, ensuring access to food supplies while limiting the availability for adversaries.
 
-It is also visible that there is a trend of more fatal conflicts happening near borders of districts, this could be due to borders are usually further away from the main settlement or urban centers, which prevent injured individuals from getting help. The Military Forces of Myanmar are also known to camp at borders, which could also explain why most fatal conflicts with the military happens near borders of districts.
+We observed a trend of more fatal conflicts occurring near district borders. This may be attributed to the greater distance between these areas and main settlements or urban centers, hindering access to medical assistance for injured individuals. Additionally, the Myanmar Military Forces are known to camp at borders, which could explain the concentration of fatal conflicts involving the military in these regions.
 
-Additionally, 2nd-Order Spatial Point Patterns Analysis using G-Function shows that the fatal conflict distribution was not randomly distributed. Hence, it is of some truth that fatal conflicts that involves the Military Forces of Myanmar are due to plans by them to take control over certain parts of Myanmar, especially at the south regions of the Sagaing state.
+Furthermore, second-order spatial point patterns analysis using the G-function revealed a non-random distribution of fatal conflicts. This suggests that the conflicts involving the Myanmar Military Forces are likely part of a deliberate strategy to gain control over specific regions of Myanmar, particularly in the southern parts of Sagaing State.
 
 
 ## 7.0 Spatio-Temporal Point Patterns Analysis
@@ -601,14 +601,21 @@ for(i in tims){
 }
 ```
 
-### 8.0 Possible explanation of the Spatio-temporal KDE and 2nd-Order Spatial Point Patterns Analysis
-We can see that from the Spatio-temporal KDE, other than 2021 Q2 and 2022 Q1, there seems to be some level of fatal conflicts happening at the Southern side of Sagaing state. It is also quite obvious that throughout the quarters, most of the fatal conflicts happen at the border of Sagaing state. Which was also identified during the static analysis of KDE within the Southern region of Sagaing State.
+## 8.0 Possible explanation of the Spatio-temporal KDE and 2nd-Order Spatial Point Patterns Analysis
+Spatio-temporal KDE analysis indicates that, with the exception of 2021 Q2 and 2022 Q1, there is a consistent presence of fatal conflicts in the southern part of Sagaing State. Additionally, throughout the quarters, the majority of fatal conflicts occur along the border of Sagaing State, a finding also confirmed by static KDE analysis within the southern region.
 
-Another interesting finding is that, fatal conflicts in Sagaing State seems to be lower generally during Q2 and Q3 and more dense during Q1 and Q4, with the year 2022 being an exception. A potential reason for such trend could be due to the fact that most of the rice are harvested during mid-October of the year, with the second greater rice harvest during March. If the case that the Military Forces of Myanmar are getting into fatal conflicts for the control of agriculture land is true, the data would make a lot of sense as to why there is a spike in fatal conflicts during these periods.
+An intriguing observation is the generally lower intensity of fatal conflicts in Sagaing State during Q2 and Q3, with a more concentrated occurrence in Q1 and Q4. This pattern may be attributed to the timing of rice harvests, which typically take place in mid-October and March. If the hypothesis that the Myanmar Military Forces engage in conflicts to control agricultural lands is accurate, these seasonal variations in conflict intensity would align with the strategic importance of these periods for resource acquisition.
 
-Another reason to potentially justify the lesser density of fatal conflicts within Sagaing State in 2022 could be due to the fact that in 2022, the Military Forces of Myanmar intensified their military operations against the ethic armed group in some areas, including the neighboring Chin State. Where more militants are likely to relocate from within or around Sagaing State to the neighboring Chin State, to help with the military operations against the ethic armed group in that region.
+Furthermore, the relatively lower density of fatal conflicts in Sagaing State during 2022 could be explained by the intensified military operations conducted by the Myanmar Military Forces against ethnic armed groups in neighboring regions and districts, such as Chin State that borders Sagaing State. This may have led to a shift in militant activity away from Sagaing State and towards these other areas.
 
-### 9.0 Conclusion
+## 9.0 Interactive Map View
+```{r}
+tmap_mode('view')
+tm_shape(sagaing_fatal_conflict_sf) +
+  tm_dots()
+```
+
+## 10.0 Conclusion
 In conclusion, the spatio-temporal analysis of armed conflict in Myanmar, employing Kernel Density Estimation (KDE) and spatial point patterns analysis, offers a comprehensive understanding of the conflict's complex dynamics. By examining the spatial distribution, temporal patterns, and underlying drivers, this study provides valuable insights for policymakers, humanitarian organisations, and peacebuilding initiatives.
 
 Although there is limited data available regarding the actual intention of parties in conflicts and wars, and sources that report about tensions can sometimes be very bias. Data and findings can help us to make educated guess as to what is happening. In this assignment, the findings underscore the multifaceted nature of the conflict, influenced by the military's strategic objectives, resource considerations, and broader geopolitical factors. The ongoing civil war, characterised by displacement, humanitarian crises, and human rights violations, is a direct consequence of these underlying dynamics.

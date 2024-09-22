@@ -611,7 +611,7 @@ Furthermore, the relatively lower density of fatal conflicts in Sagaing State du
 
 ## 9.0 Interactive Map View
 ```{r}
-tmap_mode('view')
+tmap_mode('plot')
 tm_shape(sagaing_fatal_conflict_sf) +
   tm_dots()
 ```

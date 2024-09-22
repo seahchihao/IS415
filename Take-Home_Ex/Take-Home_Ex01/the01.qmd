@@ -441,6 +441,7 @@ plot(density(katha_ppp.km,
 #### 5.1 **Analysing Spatial Point Process Using G-Function**
 
 *Gest()* of **spatat** package is used to compute G-function.
+
 ::: panel-tabset
 
 ### Shwebo

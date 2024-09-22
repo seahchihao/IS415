@@ -1,0 +1,618 @@
+---
+title: "Geospatial Analytics for Social Good: Application of Spatial and Spatio-temporal Point Patterns Analysis to discover the geographical distribution of Armed Conflict in Myanmar"
+subtitle: "Take-home Exercise 01"
+author: "Seah Chi Hao"
+date: 2024-09-22
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  freeze: true
+  output: true
+  warning: false
+
+---
+
+## 1.0 Overview
+
+### 1.1 Context
+
+Millions of people have their lives shattered by armed conflict – wars – every year.
+
+Armed conflict has been on the rise since about 2012, after a decline in the 1990s and early 2000s. First came conflicts in Libya, Syria and Yemen, triggered by the 2011 Arab uprisings. Libya’s instability spilled south, helping set off a protracted crisis in the Sahel region. A fresh wave of major combat followed: the 2020 Azerbaijani-Armenian war over the Nagorno-Karabakh enclave, horrific fighting in Ethiopia’s northern Tigray region that began weeks later, the conflict prompted by the Myanmar army’s 2021 power grab and Russia’s 2022 assault on Ukraine. Add to those 2023’s devastation in Sudan and Gaza. Around the globe, more people are dying in fighting, being forced from their homes or in need of life-saving aid than in decades.
+
+We would be zooming into the world's longest civil war in Myanmar by using relevant spatial point patterns analysis methods to discover the spatial and spatio-temporal distribution of armed conflict in Myanmar.
+
+### 1.2 Data
+
+#### 1.2.1 **Armed Conflict Data**
+We would be getting Myanmar armed conflict data (2021 to June 2024) from [Armed Conflict Location & Event Data (ACLED)](https://acleddata.com/), an independent, impartial, international non-profit organization collecting data on violent conflict and protest in all countries and territories in the world.
+
+#### **1.2.2 GIS Data**
+We would get our relevant administrative boundary GIS Data from [Myanmar Information Management Unit, MIMU](http://www.themimu.info/).
+
+
+## 2.0 Setup
+In this assignment, six R packages will be used, they are:
+
+-   [**sf**](https://r-spatial.github.io/sf/), a relatively new R package specially designed to import, manage and process vector-based geospatial data in R.
+-   [**spatstat**](https://spatstat.org/), which has a wide range of useful functions for point pattern analysis. In this hands-on exercise, it will be used to perform 1st- and 2nd-order spatial point patterns analysis and derive kernel density estimation (KDE) layer.
+- [**sparr**](https://tilmandavies.github.io/sparr/index.html) provides functions to estimate fixed and adaptive kernel-smoothed spatial relative risk surfaces via the density-ratio method and perform subsequent inference. Fixed-bandwidth spatiotemporal density and relative risk estimation is also supported
+-   [**raster**](https://cran.r-project.org/web/packages/raster/) which reads, writes, manipulates, analyses and model of gridded spatial data (i.e. raster). In this hands-on exercise, it will be used to convert image output generate by spatstat into raster format.
+-   [**maptools**](https://cran.r-project.org/web/packages/maptools/index.html) which provides a set of tools for manipulating geographic data. In this hands-on exercise, we mainly use it to convert *Spatial* objects into *ppp* format of **spatstat**.
+-   [**tmap**](https://cran.r-project.org/web/packages/tmap/index.html) which provides functions for plotting cartographic quality static point patterns maps or interactive maps by using [leaflet](https://leafletjs.com/) API.
+
+The following code chunk below is used to install and launch the six R packages.
+```{r}
+pacman::p_load(sf, raster, spatstat, sparr, tmap, tidyverse)
+```
+
+## 3.0 Data Wrangling
+
+### 3.1 Armed Conflict Data
+
+#### 3.1.1 **Import and prepare Myanmar Armed Conflict Data**
+
+In the code chunk below, we read the data Myanmar Armed Conflict Data and convert the data to Projected Coordinate System (CRS: 32647) from the Geographic Coordinate System, as scanning through the raw csv data. The latitude and longitude data shows that the data is following the Geographic Coordinate System and a Projected Coordinate System would be a better form of geodata for analysis in this context.
+
+We also did some light data preparation of the data by changing the format of the date and deriving the quarter of each event.
+```{r}
+raw_data <- read_csv("data/raw/2021-01-01-2024-06-30-Myanmar.csv") %>%
+  st_as_sf(coords = c(
+    "longitude", "latitude"),
+    crs=4326) %>%
+  st_transform(crs = 32647) %>%
+  mutate(event_date = dmy(event_date)) %>%
+  mutate(quarter = quarter(event_date)) %>%
+  mutate(quarter = case_when(
+    year == 2022 & quarter < 8 ~ quarter + 5,
+    year == 2023 & quarter < 4 ~ quarter + 9,
+    year == 2024 & quarter < 1 ~ quarter + 13,
+    TRUE ~ quarter
+  ))
+```
+
+#### 3.1.2 **Filter out fatal conflicts associated with the Military Forces of Myanmar**
+
+Since we are interested in conflicts that involves the Myanmar Military, we filter out the data with the following code chunk.
+```{r}
+military_conflict <- raw_data %>%
+  filter(!is.na(actor1) & !is.na(actor2) &
+           grepl("Military Forces of Myanmar", actor1) | grepl("Military Forces of Myanmar", actor2))
+```
+
+We are interested in events that led to some degree of fatal outcome, hence we further filter our data with the code below.
+```{r}
+military_conflict <- military_conflict %>%
+  filter(fatalities > 0)
+```
+
+```{r}
+#| eval: false
+#| echo: false
+write_rds(military_conflict, "data/rds/military_conflict.rds")
+```
+
+### 3.2 Administrative boundary data
+
+#### 3.2.1 **Importing the administrative boundary data**
+```{r}
+boundary = st_read(dsn = "data/raw/mmr_polbnda2_adm1_250k_mimu_1", 
+                layer = "mmr_polbnda2_adm1_250k_mimu_1")
+districts_townships = st_read(dsn = "data/raw/mmr_polbnda_adm3_250k_mimu_1", 
+                layer = "mmr_polbnda_adm3_250k_mimu_1")
+```
+
+#### 3.2.2 **Preparing Data**
+
+We transform the data to Projected Coordinate System (CRS: 32647), allowing for a consistent geodata system to be use for analysis.
+```{r}
+boundary <- boundary %>%
+  st_transform(crs = 32647)
+
+districts_townships <- districts_townships %>%
+  st_transform(crs = 32647)
+```
+
+
+To ensure that the data can be better manipulated, we need to ensure syntax of the same variable matches.
+
+For the code chunk below, we are changing the ST data to be consistent with the format of *admin1* in the `military_conflict` dataframe.
+```{r}
+boundary <- boundary %>%
+  mutate(ST = str_replace_all(ST, "\\(", "- ")) %>%
+  mutate(ST = str_remove_all(ST, "\\)"))
+```
+
+
+```{r}
+#| eval: false
+#| echo: false
+write_rds(boundary, "data/rds/boundary.rds")
+```
+
+
+### 3.3 Combining the data
+
+Joining the attribute data and geospatial data
+```{r}
+military_conflict_distribution <- st_join(military_conflict, boundary,
+                          by = c("admin1" = "ST"))
+```
+
+```{r}
+#| eval: false
+#| echo: false
+write_rds(military_conflict_distribution, "data/rds/military_conflict_distribution.rds")
+```
+
+### 3.4 Filtering Data for analysis
+
+#### 3.4.1 **Overall Distribution of fatal conflicts associated with the Military Forces of Myanmar**
+
+We plot an overall distribution of fatal conflicts associated with the Military Forces of Myanmar to get a sensing of the areas we want to focus on.
+```{r}
+tmap_mode('plot')
+tm_shape(boundary) +
+tm_polygons() +
+  tm_shape(military_conflict_distribution) +
+  tm_dots()
+```
+We also rank the States and Regions by the amount of fatal conflicts associated with the Military Forces of Myanmar.
+```{r}
+unique_admin1 <- military_conflict %>%
+  count(admin1, name = "count") %>%
+  arrange(desc(count))
+
+unique_admin1
+```
+
+From visual as well as data observation, we can see that most fatalities in Myanmar that involves the Military Forces of Myanmar happens within the Sagaing State. 
+
+Hence, we will zoom into the region for a more detailed analysis and hopefully discover more reasons as to why is the distribution is as such.
+
+#### 3.4.2 **Extract data points within Sagaing State**
+``` {r}
+sagaing_fatal_conflict <- military_conflict_distribution %>%
+  filter(ST == "Sagaing")
+sagaing_boundary <- boundary %>%
+  filter(ST == "Sagaing")
+sagaing_districts <- districts_townships %>%
+  filter(ST == "Sagaing")
+```
+
+#### 3.4.3 **Cleaning of key data for analysis**
+
+Cleaning of data by keep only necessary columns from `sagaing_fatal_conflict`.
+
+::: callout-note
+
+We drop unnecessary columns with data that is:
+
+- not as relevant (i.e. *source*, *source_scale*, etc.) and;
+- columns that has the same data for every row (i.e. *iso*, *region*, *country*, etc.)
+
+:::
+
+```{r}
+sagaing_fatal_conflict_sf <- sagaing_fatal_conflict %>%
+  dplyr::select(event_id_cnty, event_date, year, quarter, disorder_type, sub_event_type, actor1, assoc_actor_1, actor2, assoc_actor_2, admin2, admin3, location, fatalities, geometry)
+
+sagaing_boundary_sf <- sagaing_boundary %>% 
+  dplyr::select(OBJECTID, ST, geometry)
+
+sagaing_districts_sf <- sagaing_districts %>% 
+  dplyr::select(OBJECTID, ST, DT, TS, geometry)
+```
+
+
+```{r}
+#| eval: false
+#| echo: false
+write_rds(sagaing_fatal_conflict_sf, "data/rds/sagaing_fatal_conflict_sf.rds")
+write_rds(sagaing_boundary_sf, "data/rds/sagaing_boundary_sf.rds")
+write_rds(sagaing_districts_sf, "data/rds/sagaing_districts_sf.rds")
+# we deleted the rest of the rds file that was previously saved, as this would be the "clean" data we will be working with in the next few parts of this assignment
+```
+
+
+### 3.5 Geospatial Data Wrangling
+
+#### 3.5.1 **Converting from sf format into spatstat’s ppp format**
+We use *as.ppp()* function of spatstat to convert the spatial data into spatstat’s ppp object format.
+```{r}
+sagaing_fatal_conflict_ppp <- as.ppp(sagaing_fatal_conflict_sf)
+sagaing_fatal_conflict_ppp
+```
+We plot `sagaing_fatal_conflict_ppp` to have a visual sensening of the data.
+```{r}
+plot(sagaing_fatal_conflict_ppp)
+```
+
+It is also good to take a look at the summary statistics of the created ppp object.
+```{r}
+summary(sagaing_fatal_conflict_ppp)
+```
+#### 3.5.2 **Check for duplicates**
+
+We can check the duplication in ppp object using the following code.
+```{r}
+any(duplicated(sagaing_fatal_conflict_ppp))
+```
+For this data, we managed to not have duplicates.
+
+#### 3.5.3 **Creating *owin* object**
+
+When analysing spatial point patterns, it is a good practice to confine the analysis with a geographical area, and we do so using *owin*.
+
+The code chunk below is used to covert `sagaing_boundary_sf` object into *owin* object of **spatstat**.
+```{r}
+sagaing_boundary_owin <- as.owin(sagaing_boundary_sf)
+```
+
+#### 3.5.4 **Combining point events object and owin object**
+
+We combine the point events object `sagaing_fatal_conflict_ppp` with the owin object `sagaing_boundary_owin`, with the following code.
+```{r}
+fatal_sagaing_ppp = sagaing_fatal_conflict_ppp[sagaing_boundary_owin]
+summary(fatal_sagaing_ppp)
+```
+## 4.0 Further Filtering
+
+### 4.1 **Overall Distribution of fatal conflicts associated with the Military Forces of Myanmar in Sagaing**
+```{r}
+tmap_mode('plot')
+tm_shape(sagaing_districts_sf) +
+  tm_polygons() +
+    tm_layout(main.title = "Distribution of Sagaing fatal events",
+            main.title.position = "center",
+            main.title.size = 0.8) +
+  tm_shape(sagaing_fatal_conflict_sf) +
+  tm_dots()
+```
+
+We also rank the district by the amount of fatal conflicts associated with the Military Forces of Myanmar.
+```{r}
+unique_admin2 <- sagaing_fatal_conflict_sf %>%
+  count(admin2, name = "count") %>% 
+  arrange(desc(count))
+
+unique_admin2
+```
+
+From the data we see Shwebo, Yinmarbin, Monywa, Kale, Sagaing and Katha	district has a relatively high fatalities of more than 300.
+
+We would be studying these 6 districts of Sagaing State as analysising the data of the whole Sagaing while more than half the events are hapenning at specific regions might skew the data and lead to a questionable analysis.
+
+
+### 4.2 Extracting study area
+
+The code chunk below will be used to extract the target districts.
+```{r}
+shwebo <- sagaing_districts_sf %>%
+  filter(DT == "Shwebo")
+yinmarbin <- sagaing_districts_sf %>%
+  filter(DT == "Yinmarbin")
+monywa <- sagaing_districts_sf %>%
+  filter(DT == "Monywa")
+kale <- sagaing_districts_sf %>%
+  filter(DT == "Kale")
+sagaing <- sagaing_districts_sf %>%
+  filter(DT == "Sagaing")
+katha <- sagaing_districts_sf %>%
+  filter(DT == "Katha")
+```
+
+#### 4.2.1 **Converting sf objects into owin objects**
+```{r}
+shwebo_owin = as.owin(shwebo)
+yinmarbin_owin = as.owin(yinmarbin)
+monywa_owin = as.owin(monywa)
+kale_owin = as.owin(kale)
+sagaing_owin = as.owin(sagaing)
+katha_owin = as.owin(katha)
+```
+
+#### 4.2.2 **Combining fatal event points and the study areas**
+```{r}
+shwebo_ppp = fatal_sagaing_ppp[shwebo_owin]
+yinmarbin_ppp = fatal_sagaing_ppp[yinmarbin_owin]
+monywa_ppp = fatal_sagaing_ppp[monywa_owin]
+kale_ppp = fatal_sagaing_ppp[kale_owin]
+sagaing_ppp = fatal_sagaing_ppp[sagaing_owin]
+katha_ppp = fatal_sagaing_ppp[katha_owin]
+```
+
+*rescale.ppp()* function is used to transform the unit of measurement from metre to kilometre.
+```{r}
+shwebo_ppp.km = rescale.ppp(shwebo_ppp, 1000, "km")
+yinmarbin_ppp.km = rescale.ppp(yinmarbin_ppp, 1000, "km")
+monywa_ppp.km = rescale.ppp(monywa_ppp, 1000, "km")
+kale_ppp.km = rescale.ppp(kale_ppp, 1000, "km")
+sagaing_ppp.km = rescale.ppp(sagaing_ppp, 1000, "km")
+katha_ppp.km = rescale.ppp(katha_ppp, 1000, "km")
+```
+
+
+#### 4.2.3 **Plot the six study area and the fatal conflicts location**
+
+::: panel-tabset
+
+### Shwebo
+```{r}
+plot(shwebo_ppp.km, main = "Shwebo")
+```
+
+### Yinmarbin
+```{r}
+plot(yinmarbin_ppp.km, main = "Yinmarbin")
+```
+
+### Monywa
+```{r}
+plot(monywa_ppp.km, main = "Monywa")
+```
+
+### Kale
+```{r}
+plot(kale_ppp.km, main = "Kale")
+```
+
+### Sagaing
+```{r}
+plot(sagaing_ppp.km, main = "Sagaing")
+```
+
+### Katha
+```{r}
+plot(katha_ppp.km, main = "Katha")
+```
+
+:::
+
+
+### 4.0 Kernel Density Estimation
+
+#### 4.1 **Compute KDE**
+The code chunk below computes a kernel density by using the following configurations of [`density()`](https://rdrr.io/cran/spatstat/man/bw.diggle.html) of **spatstat**:
+
+- We will use 5km as the bandwidth for a clearer KDE contrast.
+
+::: panel-tabset
+
+### Shwebo
+```{r}
+plot(density(shwebo_ppp.km, 
+             sigma=5, 
+             edge=TRUE, 
+             kernel="gaussian"),
+     main="Shwebo")
+```
+
+### Yinmarbin
+```{r}
+plot(density(yinmarbin_ppp.km, 
+             sigma=5, 
+             edge=TRUE, 
+             kernel="gaussian"),
+     main="Yinmarbin")
+```
+
+### Monywa
+```{r}
+plot(density(monywa_ppp.km, 
+             sigma=5, 
+             edge=TRUE, 
+             kernel="gaussian"),
+     main="Monywa")
+```
+
+### Kale
+```{r}
+plot(density(kale_ppp.km, 
+             sigma=5, 
+             edge=TRUE, 
+             kernel="gaussian"),
+     main="Kale")
+```
+
+### Sagaing
+```{r}
+plot(density(sagaing_ppp.km, 
+             sigma=5, 
+             edge=TRUE, 
+             kernel="gaussian"),
+     main="Sagaing")
+```
+
+### Katha
+```{r}
+plot(density(katha_ppp.km, 
+             sigma=5, 
+             edge=TRUE, 
+             kernel="gaussian"),
+     main="Katha")
+```
+
+:::
+
+## 5.0 Second-order Spatial Point Patterns Analysis
+
+#### 5.1 **Analysing Spatial Point Process Using G-Function**
+
+*Gest()* of **spatat** package is used to compute G-function.
+::: panel-tabset
+
+### Shwebo
+```{r}
+G_shwebo = Gest(shwebo_ppp, correction = "border")
+G_shwebo.csr <- envelope(shwebo_ppp, Gest, nsim = 999)
+plot(G_shwebo.csr)
+```
+
+### Yinmarbin
+```{r}
+G_yinmarbin = Gest(yinmarbin_ppp, correction = "border")
+G_yinmarbin.csr <- envelope(yinmarbin_ppp, Gest, nsim = 999)
+plot(G_yinmarbin.csr)
+```
+
+### Monywa
+```{r}
+G_monywa = Gest(monywa_ppp, correction = "border")
+G_monywa.csr <- envelope(monywa_ppp, Gest, nsim = 999)
+plot(G_monywa.csr)
+```
+
+### Kale
+```{r}
+G_kale = Gest(kale_ppp, correction = "border")
+G_kale.csr <- envelope(kale_ppp, Gest, nsim = 999)
+plot(G_kale.csr)
+```
+
+### Sagaing
+```{r}
+G_sagaing = Gest(sagaing_ppp, correction = "border")
+G_sagaing.csr <- envelope(sagaing_ppp, Gest, nsim = 999)
+plot(G_sagaing.csr)
+```
+
+### Katha
+```{r}
+G_katha = Gest(katha_ppp, correction = "border")
+G_katha.csr <- envelope(katha_ppp, Gest, nsim = 999)
+plot(G_katha.csr)
+```
+
+:::
+
+
+### 6.0 Possible explanation of the KDE and 2nd-Order Spatial Point Patterns Analysis
+![Figure 1: Map of Sagaing](picture/Sagaing_map.jpg){fig-align="center"}
+We can see that the regions with the highest fatal conflicts in Sagaing State are situated mainly towards south side of the state. All 6 of the study areas we analysed are at the south side of Sagaing State, that shows high fatal conflict occurrences that was associated to the Military Forces of Myanmar, which came at no surprise. 
+
+The South part of Sagaing State neighbor the Shan State, and both regions are filled with vasts agriculture land. In times of uncertainties and civil war, everyone would head to the source of food to ensure that they have enough food while their "enemy" has as little as possible.
+
+It is also visible that there is a trend of more fatal conflicts happening near borders of districts, this could be due to borders are usually further away from the main settlement or urban centers, which prevent injured individuals from getting help. The Military Forces of Myanmar are also known to camp at borders, which could also explain why most fatal conflicts with the military happens near borders of districts.
+
+Additionally, 2nd-Order Spatial Point Patterns Analysis using G-Function shows that the fatal conflict distribution was not randomly distributed. Hence, it is of some truth that fatal conflicts that involves the Military Forces of Myanmar are due to plans by them to take control over certain parts of Myanmar, especially at the south regions of the Sagaing state.
+
+
+## 7.0 Spatio-Temporal Point Patterns Analysis
+
+
+### 7.1 Study area (Sagaing State)
+We would be analysing Sagaing State as a whole for Spatio-Temporal Point Patterns Analysis. To see what are the movements of the fatal conflicts involving the Military Forces of Myanmar looks like.
+
+### 7.2 Visualising Distribution of fatal conflicts associated with the Military Forces of Myanmar in Sagaing
+```{r}
+tmap_mode('plot')
+tm_shape(sagaing_districts_sf) +
+  tm_polygons() +
+    tm_layout(main.title = "Distribution of Sagaing fatal events",
+            main.title.position = "center",
+            main.title.size = 0.8) +
+  tm_shape(sagaing_fatal_conflict_sf) +
+  tm_dots()
+```
+
+### 7.3 Visualising Distribution of fatal conflicts associated with the Military Forces of Myanmar in Sagaing by quarter
+```{r}
+tmap_mode('plot')
+tm_shape(sagaing_districts_sf) +
+  tm_polygons() +
+    tm_layout(main.title = "Distribution of Sagaing fatal events",
+            main.title.position = "center",
+            main.title.size = 0.8) +
+  tm_shape(sagaing_fatal_conflict_sf) +
+  tm_dots() +
+  tm_facets(by="quarter", 
+            free.coords=FALSE, 
+            drop.units = TRUE)
+```
+
+### 7.4 Computing STKDE by Quarter
+
+We will be computing STKDE by using *spattemp.density()* of **sparr** package.
+
+#### 7.4.1 **Extracting fatal conflicts by quarter**
+
+```{r}
+sagaing_fatal_quarter <- sagaing_fatal_conflict_sf %>%
+  dplyr::select(quarter, geometry)
+```
+
+#### 7.4.2 **Creating ppp**
+
+```{r}
+sagaing_fatal_quarter_ppp <- as.ppp(sagaing_fatal_quarter)
+sagaing_fatal_quarter_ppp
+```
+
+```{r}
+summary(sagaing_fatal_quarter_ppp)
+```
+#### 7.4.3 **Check for duplicates**
+```{r}
+any(duplicated(sagaing_fatal_quarter_ppp))
+```
+```{r}
+sum(multiplicity(sagaing_fatal_quarter_ppp) > 1)
+```
+
+The output shows 1867 duplicated point event.
+Use the jittering approach to remove duplicates.
+```{r}
+sagaing_fatal_quarter_ppp_jit <- rjitter(sagaing_fatal_quarter_ppp, 
+                             retry=TRUE, 
+                             nsim=1, 
+                             drop=TRUE)
+```
+
+
+#### 7.4.4 ** Combine `sagaing_fatal_quarter_ppp` and `sagaing_boundary_owin` **
+```{r}
+sagaing_fatal_quarter_owin <- sagaing_fatal_quarter_ppp_jit[sagaing_boundary_owin]
+summary(sagaing_fatal_quarter_owin)
+```
+Plot the combine owin
+```{r}
+plot(sagaing_fatal_quarter_owin)
+```
+
+#### 7.4.5 **Computing Spatio-temporal KDE**
+
+We use `spattemp.density()` of sparr package is used to compute the STKDE.
+```{r}
+st_kde <- spattemp.density(sagaing_fatal_quarter_owin)
+summary(st_kde)
+```
+
+### 7.5 Plotting the spatio-temporal KDE object
+```{r}
+tims <- c(1,2,3,4,5,6,7,8,9,10,11,12)
+par(mfcol=c(2,3))
+for(i in tims){ 
+  plot(st_kde, i, 
+       override.par=FALSE, 
+       fix.range=TRUE, 
+       main=paste("KDE at quarter",i))
+}
+```
+
+### 8.0 Possible explanation of the Spatio-temporal KDE and 2nd-Order Spatial Point Patterns Analysis
+We can see that from the Spatio-temporal KDE, other than 2021 Q2 and 2022 Q1, there seems to be some level of fatal conflicts happening at the Southern side of Sagaing state. It is also quite obvious that throughout the quarters, most of the fatal conflicts happen at the border of Sagaing state. Which was also identified during the static analysis of KDE within the Southern region of Sagaing State.
+
+Another interesting finding is that, fatal conflicts in Sagaing State seems to be lower generally during Q2 and Q3 and more dense during Q1 and Q4, with the year 2022 being an exception. A potential reason for such trend could be due to the fact that most of the rice are harvested during mid-October of the year, with the second greater rice harvest during March. If the case that the Military Forces of Myanmar are getting into fatal conflicts for the control of agriculture land is true, the data would make a lot of sense as to why there is a spike in fatal conflicts during these periods.
+
+Another reason to potentially justify the lesser density of fatal conflicts within Sagaing State in 2022 could be due to the fact that in 2022, the Military Forces of Myanmar intensified their military operations against the ethic armed group in some areas, including the neighboring Chin State. Where more militants are likely to relocate from within or around Sagaing State to the neighboring Chin State, to help with the military operations against the ethic armed group in that region.
+
+### 9.0 Conclusion
+In conclusion, the spatio-temporal analysis of armed conflict in Myanmar, employing Kernel Density Estimation (KDE) and spatial point patterns analysis, offers a comprehensive understanding of the conflict's complex dynamics. By examining the spatial distribution, temporal patterns, and underlying drivers, this study provides valuable insights for policymakers, humanitarian organisations, and peacebuilding initiatives.
+
+Although there is limited data available regarding the actual intention of parties in conflicts and wars, and sources that report about tensions can sometimes be very bias. Data and findings can help us to make educated guess as to what is happening. In this assignment, the findings underscore the multifaceted nature of the conflict, influenced by the military's strategic objectives, resource considerations, and broader geopolitical factors. The ongoing civil war, characterised by displacement, humanitarian crises, and human rights violations, is a direct consequence of these underlying dynamics.
+
+KDE, through its visualisation capabilities, provides a visual representation of conflict intensity, aiding in identifying areas of high and low conflict risk. Spatial point patterns analysis, on the other hand, delves deeper into the underlying spatial and temporal dynamics, revealing patterns and trends that may not be immediately apparent.
+
+The combination of these methods offers a more comprehensive understanding of the conflict's complexities, enabling policymakers to make informed decisions regarding resource allocation, conflict prevention strategies, and humanitarian interventions. By addressing the root causes of the conflict and promoting sustainable peace, it is possible to mitigate the suffering of millions affected by this ongoing crisis.

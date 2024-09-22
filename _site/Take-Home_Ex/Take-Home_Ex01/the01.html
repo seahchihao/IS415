@@ -1,0 +1,1941 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Seah Chi Hao">
+<meta name="dcterms.date" content="2024-09-22">
+
+<title>Geospatial Analytics for Social Good: Application of Spatial and Spatio-temporal Point Patterns Analysis to discover the geographical distribution of Armed Conflict in Myanmar</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../..//pictures/favicon.jpg" rel="icon" type="image/jpeg">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../../site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Chi Hao’s IS415 Journey</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Overview</span></a>
+  </li>  
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-hands-on-exercise" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Hands-On Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-hands-on-exercise">    
+        <li>
+    <a class="dropdown-item" href="../../Hands-On_Ex/Hands-On_Ex01/hoe01.html">
+ <span class="dropdown-text">Hands-On Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-On_Ex/Hands-On_Ex02/hoe02.html">
+ <span class="dropdown-text">Hands-On Exercise 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-On_Ex/Hands-On_Ex03/hoe03.html">
+ <span class="dropdown-text">Hands-On Exercise 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-On_Ex/Hands-On_Ex05/hoe05.html">
+ <span class="dropdown-text">Hands-On Exercise 5</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-On_Ex/Hands-On_Ex06/hoe06a.html">
+ <span class="dropdown-text">Hands-On Exercise 6a</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Hands-On_Ex/Hands-On_Ex06/hoe06b.html">
+ <span class="dropdown-text">Hands-On Exercise 6b</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-in-class-exercise" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">In-Class Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-in-class-exercise">    
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-Class_Ex02/ice02.html">
+ <span class="dropdown-text">In-Class Exercise 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-Class_Ex03/ice03.html">
+ <span class="dropdown-text">In-Class Exercise 3</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-Class_Ex04/ice04.html">
+ <span class="dropdown-text">In-Class Exercise 4</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../In-Class_Ex/In-Class_Ex05/ice05.html">
+ <span class="dropdown-text">In-Class Exercise 5</span></a>
+  </li>  
+    </ul>
+  </li>
+  <li class="nav-item dropdown ">
+    <a class="nav-link dropdown-toggle" href="#" id="nav-menu-take-home-exercise" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+ <span class="menu-text">Take-Home Exercise</span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="nav-menu-take-home-exercise">    
+        <li>
+    <a class="dropdown-item" href="../../Take-Home_Ex/Take-Home_Ex01/the01.html">
+ <span class="dropdown-text">Take-Home Exercise 1</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Take-Home_Ex/Take-Home_Ex02/the02.html">
+ <span class="dropdown-text">Take-Home Exercise 2</span></a>
+  </li>  
+        <li>
+    <a class="dropdown-item" href="../../Take-Home_Ex/Take-Home_Ex03/the03.html">
+ <span class="dropdown-text">Take-Home Exercise 3</span></a>
+  </li>  
+    </ul>
+  </li>
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">1.0 Overview</a>
+  <ul class="collapse">
+  <li><a href="#context" id="toc-context" class="nav-link" data-scroll-target="#context">1.1 Context</a></li>
+  <li><a href="#data" id="toc-data" class="nav-link" data-scroll-target="#data">1.2 Data</a></li>
+  </ul></li>
+  <li><a href="#setup" id="toc-setup" class="nav-link" data-scroll-target="#setup">2.0 Setup</a></li>
+  <li><a href="#data-wrangling" id="toc-data-wrangling" class="nav-link" data-scroll-target="#data-wrangling">3.0 Data Wrangling</a>
+  <ul class="collapse">
+  <li><a href="#armed-conflict-data-1" id="toc-armed-conflict-data-1" class="nav-link" data-scroll-target="#armed-conflict-data-1">3.1 Armed Conflict Data</a></li>
+  <li><a href="#administrative-boundary-data" id="toc-administrative-boundary-data" class="nav-link" data-scroll-target="#administrative-boundary-data">3.2 Administrative boundary data</a></li>
+  <li><a href="#combining-the-data" id="toc-combining-the-data" class="nav-link" data-scroll-target="#combining-the-data">3.3 Combining the data</a></li>
+  <li><a href="#filtering-data-for-analysis" id="toc-filtering-data-for-analysis" class="nav-link" data-scroll-target="#filtering-data-for-analysis">3.4 Filtering Data for analysis</a></li>
+  <li><a href="#geospatial-data-wrangling" id="toc-geospatial-data-wrangling" class="nav-link" data-scroll-target="#geospatial-data-wrangling">3.5 Geospatial Data Wrangling</a></li>
+  </ul></li>
+  <li><a href="#further-filtering" id="toc-further-filtering" class="nav-link" data-scroll-target="#further-filtering">4.0 Further Filtering</a>
+  <ul class="collapse">
+  <li><a href="#overall-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing" id="toc-overall-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing" class="nav-link" data-scroll-target="#overall-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing">4.1 <strong>Overall Distribution of fatal conflicts associated with the Military Forces of Myanmar in Sagaing</strong></a></li>
+  <li><a href="#extracting-study-area" id="toc-extracting-study-area" class="nav-link" data-scroll-target="#extracting-study-area">4.2 Extracting study area</a></li>
+  <li><a href="#kernel-density-estimation" id="toc-kernel-density-estimation" class="nav-link" data-scroll-target="#kernel-density-estimation">4.0 Kernel Density Estimation</a></li>
+  </ul></li>
+  <li><a href="#second-order-spatial-point-patterns-analysis" id="toc-second-order-spatial-point-patterns-analysis" class="nav-link" data-scroll-target="#second-order-spatial-point-patterns-analysis">5.0 Second-order Spatial Point Patterns Analysis</a>
+  <ul class="collapse">
+  <li><a href="#shwebo-2" id="toc-shwebo-2" class="nav-link" data-scroll-target="#shwebo-2">Shwebo</a></li>
+  <li><a href="#yinmarbin-2" id="toc-yinmarbin-2" class="nav-link" data-scroll-target="#yinmarbin-2">Yinmarbin</a></li>
+  <li><a href="#monywa-2" id="toc-monywa-2" class="nav-link" data-scroll-target="#monywa-2">Monywa</a></li>
+  <li><a href="#kale-2" id="toc-kale-2" class="nav-link" data-scroll-target="#kale-2">Kale</a></li>
+  <li><a href="#sagaing-2" id="toc-sagaing-2" class="nav-link" data-scroll-target="#sagaing-2">Sagaing</a></li>
+  <li><a href="#katha-2" id="toc-katha-2" class="nav-link" data-scroll-target="#katha-2">Katha</a></li>
+  <li><a href="#possible-explanation-of-the-kde-and-2nd-order-spatial-point-patterns-analysis" id="toc-possible-explanation-of-the-kde-and-2nd-order-spatial-point-patterns-analysis" class="nav-link" data-scroll-target="#possible-explanation-of-the-kde-and-2nd-order-spatial-point-patterns-analysis">6.0 Possible explanation of the KDE and 2nd-Order Spatial Point Patterns Analysis</a></li>
+  </ul></li>
+  <li><a href="#spatio-temporal-point-patterns-analysis" id="toc-spatio-temporal-point-patterns-analysis" class="nav-link" data-scroll-target="#spatio-temporal-point-patterns-analysis">7.0 Spatio-Temporal Point Patterns Analysis</a>
+  <ul class="collapse">
+  <li><a href="#study-area-sagaing-state" id="toc-study-area-sagaing-state" class="nav-link" data-scroll-target="#study-area-sagaing-state">7.1 Study area (Sagaing State)</a></li>
+  <li><a href="#visualising-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing" id="toc-visualising-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing" class="nav-link" data-scroll-target="#visualising-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing">7.2 Visualising Distribution of fatal conflicts associated with the Military Forces of Myanmar in Sagaing</a></li>
+  <li><a href="#visualising-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing-by-quarter" id="toc-visualising-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing-by-quarter" class="nav-link" data-scroll-target="#visualising-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing-by-quarter">7.3 Visualising Distribution of fatal conflicts associated with the Military Forces of Myanmar in Sagaing by quarter</a></li>
+  <li><a href="#computing-stkde-by-quarter" id="toc-computing-stkde-by-quarter" class="nav-link" data-scroll-target="#computing-stkde-by-quarter">7.4 Computing STKDE by Quarter</a></li>
+  <li><a href="#plotting-the-spatio-temporal-kde-object" id="toc-plotting-the-spatio-temporal-kde-object" class="nav-link" data-scroll-target="#plotting-the-spatio-temporal-kde-object">7.5 Plotting the spatio-temporal KDE object</a></li>
+  <li><a href="#possible-explanation-of-the-spatio-temporal-kde-and-2nd-order-spatial-point-patterns-analysis" id="toc-possible-explanation-of-the-spatio-temporal-kde-and-2nd-order-spatial-point-patterns-analysis" class="nav-link" data-scroll-target="#possible-explanation-of-the-spatio-temporal-kde-and-2nd-order-spatial-point-patterns-analysis">8.0 Possible explanation of the Spatio-temporal KDE and 2nd-Order Spatial Point Patterns Analysis</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">9.0 Conclusion</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Geospatial Analytics for Social Good: Application of Spatial and Spatio-temporal Point Patterns Analysis to discover the geographical distribution of Armed Conflict in Myanmar</h1>
+<p class="subtitle lead">Take-home Exercise 01</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Seah Chi Hao </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">September 22, 2024</p>
+    </div>
+  </div>
+  
+    <div>
+    <div class="quarto-title-meta-heading">Modified</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">September 22, 2024</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="overview" class="level2">
+<h2 class="anchored" data-anchor-id="overview">1.0 Overview</h2>
+<section id="context" class="level3">
+<h3 class="anchored" data-anchor-id="context">1.1 Context</h3>
+<p>Millions of people have their lives shattered by armed conflict – wars – every year.</p>
+<p>Armed conflict has been on the rise since about 2012, after a decline in the 1990s and early 2000s. First came conflicts in Libya, Syria and Yemen, triggered by the 2011 Arab uprisings. Libya’s instability spilled south, helping set off a protracted crisis in the Sahel region. A fresh wave of major combat followed: the 2020 Azerbaijani-Armenian war over the Nagorno-Karabakh enclave, horrific fighting in Ethiopia’s northern Tigray region that began weeks later, the conflict prompted by the Myanmar army’s 2021 power grab and Russia’s 2022 assault on Ukraine. Add to those 2023’s devastation in Sudan and Gaza. Around the globe, more people are dying in fighting, being forced from their homes or in need of life-saving aid than in decades.</p>
+<p>We would be zooming into the world’s longest civil war in Myanmar by using relevant spatial point patterns analysis methods to discover the spatial and spatio-temporal distribution of armed conflict in Myanmar.</p>
+</section>
+<section id="data" class="level3">
+<h3 class="anchored" data-anchor-id="data">1.2 Data</h3>
+<section id="armed-conflict-data" class="level4">
+<h4 class="anchored" data-anchor-id="armed-conflict-data">1.2.1 <strong>Armed Conflict Data</strong></h4>
+<p>We would be getting Myanmar armed conflict data (2021 to June 2024) from <a href="https://acleddata.com/">Armed Conflict Location &amp; Event Data (ACLED)</a>, an independent, impartial, international non-profit organization collecting data on violent conflict and protest in all countries and territories in the world.</p>
+</section>
+<section id="gis-data" class="level4">
+<h4 class="anchored" data-anchor-id="gis-data"><strong>1.2.2 GIS Data</strong></h4>
+<p>We would get our relevant administrative boundary GIS Data from <a href="http://www.themimu.info/">Myanmar Information Management Unit, MIMU</a>.</p>
+</section>
+</section>
+</section>
+<section id="setup" class="level2">
+<h2 class="anchored" data-anchor-id="setup">2.0 Setup</h2>
+<p>In this assignment, six R packages will be used, they are:</p>
+<ul>
+<li><a href="https://r-spatial.github.io/sf/"><strong>sf</strong></a>, a relatively new R package specially designed to import, manage and process vector-based geospatial data in R.</li>
+<li><a href="https://spatstat.org/"><strong>spatstat</strong></a>, which has a wide range of useful functions for point pattern analysis. In this hands-on exercise, it will be used to perform 1st- and 2nd-order spatial point patterns analysis and derive kernel density estimation (KDE) layer.</li>
+<li><a href="https://tilmandavies.github.io/sparr/index.html"><strong>sparr</strong></a> provides functions to estimate fixed and adaptive kernel-smoothed spatial relative risk surfaces via the density-ratio method and perform subsequent inference. Fixed-bandwidth spatiotemporal density and relative risk estimation is also supported</li>
+<li><a href="https://cran.r-project.org/web/packages/raster/"><strong>raster</strong></a> which reads, writes, manipulates, analyses and model of gridded spatial data (i.e.&nbsp;raster). In this hands-on exercise, it will be used to convert image output generate by spatstat into raster format.</li>
+<li><a href="https://cran.r-project.org/web/packages/maptools/index.html"><strong>maptools</strong></a> which provides a set of tools for manipulating geographic data. In this hands-on exercise, we mainly use it to convert <em>Spatial</em> objects into <em>ppp</em> format of <strong>spatstat</strong>.</li>
+<li><a href="https://cran.r-project.org/web/packages/tmap/index.html"><strong>tmap</strong></a> which provides functions for plotting cartographic quality static point patterns maps or interactive maps by using <a href="https://leafletjs.com/">leaflet</a> API.</li>
+</ul>
+<p>The following code chunk below is used to install and launch the six R packages.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(sf, raster, spatstat, sparr, tmap, tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="data-wrangling" class="level2">
+<h2 class="anchored" data-anchor-id="data-wrangling">3.0 Data Wrangling</h2>
+<section id="armed-conflict-data-1" class="level3">
+<h3 class="anchored" data-anchor-id="armed-conflict-data-1">3.1 Armed Conflict Data</h3>
+<section id="import-and-prepare-myanmar-armed-conflict-data" class="level4">
+<h4 class="anchored" data-anchor-id="import-and-prepare-myanmar-armed-conflict-data">3.1.1 <strong>Import and prepare Myanmar Armed Conflict Data</strong></h4>
+<p>In the code chunk below, we read the data Myanmar Armed Conflict Data and convert the data to Projected Coordinate System (CRS: 32647) from the Geographic Coordinate System, as scanning through the raw csv data. The latitude and longitude data shows that the data is following the Geographic Coordinate System and a Projected Coordinate System would be a better form of geodata for analysis in this context.</p>
+<p>We also did some light data preparation of the data by changing the format of the date and deriving the quarter of each event.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>raw_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/raw/2021-01-01-2024-06-30-Myanmar.csv"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_as_sf</span>(<span class="at">coords =</span> <span class="fu">c</span>(</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">"longitude"</span>, <span class="st">"latitude"</span>),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">crs=</span><span class="dv">4326</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">32647</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">event_date =</span> <span class="fu">dmy</span>(event_date)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">quarter =</span> <span class="fu">quarter</span>(event_date)) <span class="sc">%&gt;%</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">quarter =</span> <span class="fu">case_when</span>(</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    year <span class="sc">==</span> <span class="dv">2022</span> <span class="sc">&amp;</span> quarter <span class="sc">&lt;</span> <span class="dv">8</span> <span class="sc">~</span> quarter <span class="sc">+</span> <span class="dv">5</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    year <span class="sc">==</span> <span class="dv">2023</span> <span class="sc">&amp;</span> quarter <span class="sc">&lt;</span> <span class="dv">4</span> <span class="sc">~</span> quarter <span class="sc">+</span> <span class="dv">9</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    year <span class="sc">==</span> <span class="dv">2024</span> <span class="sc">&amp;</span> quarter <span class="sc">&lt;</span> <span class="dv">1</span> <span class="sc">~</span> quarter <span class="sc">+</span> <span class="dv">13</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> quarter</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  ))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="filter-out-fatal-conflicts-associated-with-the-military-forces-of-myanmar" class="level4">
+<h4 class="anchored" data-anchor-id="filter-out-fatal-conflicts-associated-with-the-military-forces-of-myanmar">3.1.2 <strong>Filter out fatal conflicts associated with the Military Forces of Myanmar</strong></h4>
+<p>Since we are interested in conflicts that involves the Myanmar Military, we filter out the data with the following code chunk.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>military_conflict <span class="ot">&lt;-</span> raw_data <span class="sc">%&gt;%</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(actor1) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(actor2) <span class="sc">&amp;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>           <span class="fu">grepl</span>(<span class="st">"Military Forces of Myanmar"</span>, actor1) <span class="sc">|</span> <span class="fu">grepl</span>(<span class="st">"Military Forces of Myanmar"</span>, actor2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We are interested in events that led to some degree of fatal outcome, hence we further filter our data with the code below.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>military_conflict <span class="ot">&lt;-</span> military_conflict <span class="sc">%&gt;%</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(fatalities <span class="sc">&gt;</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="administrative-boundary-data" class="level3">
+<h3 class="anchored" data-anchor-id="administrative-boundary-data">3.2 Administrative boundary data</h3>
+<section id="importing-the-administrative-boundary-data" class="level4">
+<h4 class="anchored" data-anchor-id="importing-the-administrative-boundary-data">3.2.1 <strong>Importing the administrative boundary data</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>boundary <span class="ot">=</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/raw/mmr_polbnda2_adm1_250k_mimu_1"</span>, </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">layer =</span> <span class="st">"mmr_polbnda2_adm1_250k_mimu_1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `mmr_polbnda2_adm1_250k_mimu_1' from data source 
+  `C:\Users\0seah\SMU\AY24-25 T1\IS415\IS415\Take-Home_Ex\Take-Home_Ex01\data\raw\mmr_polbnda2_adm1_250k_mimu_1' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 18 features and 6 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 92.1721 ymin: 9.696844 xmax: 101.17 ymax: 28.54554
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>districts_townships <span class="ot">=</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> <span class="st">"data/raw/mmr_polbnda_adm3_250k_mimu_1"</span>, </span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">layer =</span> <span class="st">"mmr_polbnda_adm3_250k_mimu_1"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Reading layer `mmr_polbnda_adm3_250k_mimu_1' from data source 
+  `C:\Users\0seah\SMU\AY24-25 T1\IS415\IS415\Take-Home_Ex\Take-Home_Ex01\data\raw\mmr_polbnda_adm3_250k_mimu_1' 
+  using driver `ESRI Shapefile'
+Simple feature collection with 330 features and 9 fields
+Geometry type: MULTIPOLYGON
+Dimension:     XY
+Bounding box:  xmin: 92.1721 ymin: 9.696844 xmax: 101.17 ymax: 28.54554
+Geodetic CRS:  WGS 84</code></pre>
+</div>
+</div>
+</section>
+<section id="preparing-data" class="level4">
+<h4 class="anchored" data-anchor-id="preparing-data">3.2.2 <strong>Preparing Data</strong></h4>
+<p>We transform the data to Projected Coordinate System (CRS: 32647), allowing for a consistent geodata system to be use for analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>boundary <span class="ot">&lt;-</span> boundary <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">32647</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>districts_townships <span class="ot">&lt;-</span> districts_townships <span class="sc">%&gt;%</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_transform</span>(<span class="at">crs =</span> <span class="dv">32647</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To ensure that the data can be better manipulated, we need to ensure syntax of the same variable matches.</p>
+<p>For the code chunk below, we are changing the ST data to be consistent with the format of <em>admin1</em> in the <code>military_conflict</code> dataframe.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>boundary <span class="ot">&lt;-</span> boundary <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ST =</span> <span class="fu">str_replace_all</span>(ST, <span class="st">"</span><span class="sc">\\</span><span class="st">("</span>, <span class="st">"- "</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ST =</span> <span class="fu">str_remove_all</span>(ST, <span class="st">"</span><span class="sc">\\</span><span class="st">)"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="combining-the-data" class="level3">
+<h3 class="anchored" data-anchor-id="combining-the-data">3.3 Combining the data</h3>
+<p>Joining the attribute data and geospatial data</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>military_conflict_distribution <span class="ot">&lt;-</span> <span class="fu">st_join</span>(military_conflict, boundary,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                          <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"admin1"</span> <span class="ot">=</span> <span class="st">"ST"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="filtering-data-for-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="filtering-data-for-analysis">3.4 Filtering Data for analysis</h3>
+<section id="overall-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar" class="level4">
+<h4 class="anchored" data-anchor-id="overall-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar">3.4.1 <strong>Overall Distribution of fatal conflicts associated with the Military Forces of Myanmar</strong></h4>
+<p>We plot an overall distribution of fatal conflicts associated with the Military Forces of Myanmar to get a sensing of the areas we want to focus on.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">'plot'</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(boundary) <span class="sc">+</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(military_conflict_distribution) <span class="sc">+</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_dots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We also rank the States and Regions by the amount of fatal conflicts associated with the Military Forces of Myanmar.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>unique_admin1 <span class="ot">&lt;-</span> military_conflict <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(admin1, <span class="at">name =</span> <span class="st">"count"</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(count))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>unique_admin1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 18 features and 2 fields
+Geometry type: GEOMETRY
+Dimension:     XY
+Bounding box:  xmin: -206931.7 ymin: 1103500 xmax: 562661.5 ymax: 3026505
+Projected CRS: WGS 84 / UTM zone 47N
+# A tibble: 18 × 3
+   admin1      count                                                    geometry
+   &lt;chr&gt;       &lt;int&gt;                                              &lt;GEOMETRY [m]&gt;
+ 1 Sagaing      3375 MULTIPOINT ((-13816.45 2549666), (-13808.2 2533298), (-137…
+ 2 Magway       1199 MULTIPOINT ((-14448.48 2310133), (-11778.42 2331424), (-11…
+ 3 Mandalay      789 MULTIPOINT ((68129.21 2320839), (69197.66 2321843), (70095…
+ 4 Tanintharyi   586 MULTIPOINT ((391330 1604194), (391580 1616869), (391713.2 …
+ 5 Kayin         562 MULTIPOINT ((235185 2133257), (236815.5 2149957), (241914.…
+ 6 Kayah         528 MULTIPOINT ((279858.3 2139472), (283918.5 2160815), (28752…
+ 7 Chin          520 MULTIPOINT ((-156265.4 2407840), (-152350.3 2435531), (-14…
+ 8 Shan-North    483 MULTIPOINT ((229100.8 2553686), (237609.2 2472369), (23876…
+ 9 Kachin        420 MULTIPOINT ((195339.5 2804590), (208746.8 2822422), (21107…
+10 Mon           408 MULTIPOINT ((275346.6 1937633), (276082.9 1929289), (27724…
+11 Bago-East     364 MULTIPOINT ((196713.9 2122389), (211767.7 2100190), (21319…
+12 Rakhine       337 MULTIPOINT ((-206931.7 2359490), (-204784 2358873), (-2037…
+13 Shan-South    295 MULTIPOINT ((229883.3 2328254), (231506.5 2346187), (23369…
+14 Yangon        215 MULTIPOINT ((149693.3 1924406), (161280.2 1841113), (16477…
+15 Bago-West     167 MULTIPOINT ((100594.7 2072434), (101742.1 2085661), (10944…
+16 Ayeyarwady     43 MULTIPOINT ((1429.168 1776303), (1438.857 1834871), (25125…
+17 Nay Pyi Taw    32 MULTIPOINT ((191287.1 2174478), (192547.7 2183043), (19323…
+18 Shan-East       1                                    POINT (562661.5 2354529)</code></pre>
+</div>
+</div>
+<p>From visual as well as data observation, we can see that most fatalities in Myanmar that involves the Military Forces of Myanmar happens within the Sagaing State.</p>
+<p>Hence, we will zoom into the region for a more detailed analysis and hopefully discover more reasons as to why is the distribution is as such.</p>
+</section>
+<section id="extract-data-points-within-sagaing-state" class="level4">
+<h4 class="anchored" data-anchor-id="extract-data-points-within-sagaing-state">3.4.2 <strong>Extract data points within Sagaing State</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>sagaing_fatal_conflict <span class="ot">&lt;-</span> military_conflict_distribution <span class="sc">%&gt;%</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ST <span class="sc">==</span> <span class="st">"Sagaing"</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>sagaing_boundary <span class="ot">&lt;-</span> boundary <span class="sc">%&gt;%</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ST <span class="sc">==</span> <span class="st">"Sagaing"</span>)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>sagaing_districts <span class="ot">&lt;-</span> districts_townships <span class="sc">%&gt;%</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(ST <span class="sc">==</span> <span class="st">"Sagaing"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="cleaning-of-key-data-for-analysis" class="level4">
+<h4 class="anchored" data-anchor-id="cleaning-of-key-data-for-analysis">3.4.3 <strong>Cleaning of key data for analysis</strong></h4>
+<p>Cleaning of data by keep only necessary columns from <code>sagaing_fatal_conflict</code>.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>We drop unnecessary columns with data that is:</p>
+<ul>
+<li>not as relevant (i.e.&nbsp;<em>source</em>, <em>source_scale</em>, etc.) and;</li>
+<li>columns that has the same data for every row (i.e.&nbsp;<em>iso</em>, <em>region</em>, <em>country</em>, etc.)</li>
+</ul>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>sagaing_fatal_conflict_sf <span class="ot">&lt;-</span> sagaing_fatal_conflict <span class="sc">%&gt;%</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(event_id_cnty, event_date, year, quarter, disorder_type, sub_event_type, actor1, assoc_actor_1, actor2, assoc_actor_2, admin2, admin3, location, fatalities, geometry)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>sagaing_boundary_sf <span class="ot">&lt;-</span> sagaing_boundary <span class="sc">%&gt;%</span> </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(OBJECTID, ST, geometry)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>sagaing_districts_sf <span class="ot">&lt;-</span> sagaing_districts <span class="sc">%&gt;%</span> </span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(OBJECTID, ST, DT, TS, geometry)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="geospatial-data-wrangling" class="level3">
+<h3 class="anchored" data-anchor-id="geospatial-data-wrangling">3.5 Geospatial Data Wrangling</h3>
+<section id="converting-from-sf-format-into-spatstats-ppp-format" class="level4">
+<h4 class="anchored" data-anchor-id="converting-from-sf-format-into-spatstats-ppp-format">3.5.1 <strong>Converting from sf format into spatstat’s ppp format</strong></h4>
+<p>We use <em>as.ppp()</em> function of spatstat to convert the spatial data into spatstat’s ppp object format.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>sagaing_fatal_conflict_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(sagaing_fatal_conflict_sf)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>sagaing_fatal_conflict_ppp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marked planar point pattern: 3375 points
+marks are of storage type  'character'
+window: rectangle = [-13816.45, 252995.48] x [2393568.1, 2914062.9] units</code></pre>
+</div>
+</div>
+<p>We plot <code>sagaing_fatal_conflict_ppp</code> to have a visual sensening of the data.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sagaing_fatal_conflict_ppp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>It is also good to take a look at the summary statistics of the created ppp object.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sagaing_fatal_conflict_ppp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marked planar point pattern:  3375 points
+Average intensity 2.430257e-08 points per square unit
+
+Coordinates are given to 13 decimal places
+
+marks are of type 'character'
+Summary:
+   Length     Class      Mode 
+     3375 character character 
+
+Window: rectangle = [-13816.45, 252995.48] x [2393568.1, 2914062.9] units
+                    (266800 x 520500 units)
+Window area = 1.38874e+11 square units</code></pre>
+</div>
+</div>
+</section>
+<section id="check-for-duplicates" class="level4">
+<h4 class="anchored" data-anchor-id="check-for-duplicates">3.5.2 <strong>Check for duplicates</strong></h4>
+<p>We can check the duplication in ppp object using the following code.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(sagaing_fatal_conflict_ppp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] FALSE</code></pre>
+</div>
+</div>
+<p>For this data, we managed to not have duplicates.</p>
+</section>
+<section id="creating-owin-object" class="level4">
+<h4 class="anchored" data-anchor-id="creating-owin-object">3.5.3 <strong>Creating <em>owin</em> object</strong></h4>
+<p>When analysing spatial point patterns, it is a good practice to confine the analysis with a geographical area, and we do so using <em>owin</em>.</p>
+<p>The code chunk below is used to covert <code>sagaing_boundary_sf</code> object into <em>owin</em> object of <strong>spatstat</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>sagaing_boundary_owin <span class="ot">&lt;-</span> <span class="fu">as.owin</span>(sagaing_boundary_sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="combining-point-events-object-and-owin-object" class="level4">
+<h4 class="anchored" data-anchor-id="combining-point-events-object-and-owin-object">3.5.4 <strong>Combining point events object and owin object</strong></h4>
+<p>We combine the point events object <code>sagaing_fatal_conflict_ppp</code> with the owin object <code>sagaing_boundary_owin</code>, with the following code.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>fatal_sagaing_ppp <span class="ot">=</span> sagaing_fatal_conflict_ppp[sagaing_boundary_owin]</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fatal_sagaing_ppp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marked planar point pattern:  3375 points
+Average intensity 3.595207e-08 points per square unit
+
+Coordinates are given to 13 decimal places
+
+marks are of type 'character'
+Summary:
+   Length     Class      Mode 
+     3375 character character 
+
+Window: polygonal boundary
+single connected closed polygon with 5882 vertices
+enclosing rectangle: [-17699.96, 308341.37] x [2390344.6, 3029739.1] units
+                     (326000 x 639400 units)
+Window area = 9.3875e+10 square units
+Fraction of frame area: 0.45</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="further-filtering" class="level2">
+<h2 class="anchored" data-anchor-id="further-filtering">4.0 Further Filtering</h2>
+<section id="overall-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing" class="level3">
+<h3 class="anchored" data-anchor-id="overall-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing">4.1 <strong>Overall Distribution of fatal conflicts associated with the Military Forces of Myanmar in Sagaing</strong></h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">'plot'</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(sagaing_districts_sf) <span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Distribution of Sagaing fatal events"</span>,</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">main.title.position =</span> <span class="st">"center"</span>,</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">main.title.size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(sagaing_fatal_conflict_sf) <span class="sc">+</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_dots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We also rank the district by the amount of fatal conflicts associated with the Military Forces of Myanmar.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>unique_admin2 <span class="ot">&lt;-</span> sagaing_fatal_conflict_sf <span class="sc">%&gt;%</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(admin2, <span class="at">name =</span> <span class="st">"count"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(count))</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>unique_admin2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Simple feature collection with 12 features and 2 fields
+Geometry type: GEOMETRY
+Dimension:     XY
+Bounding box:  xmin: -13816.45 ymin: 2393568 xmax: 252995.5 ymax: 2914063
+Projected CRS: WGS 84 / UTM zone 47N
+# A tibble: 12 × 3
+   admin2                      count                                    geometry
+   &lt;chr&gt;                       &lt;int&gt;                              &lt;GEOMETRY [m]&gt;
+ 1 Shwebo                        783 MULTIPOINT ((70754.36 2531928), (86043.83 …
+ 2 Yinmarbin                     530 MULTIPOINT ((34208.65 2449851), (37939.11 …
+ 3 Monywa                        514 MULTIPOINT ((83018.94 2486740), (84423.57 …
+ 4 Kale                          431 MULTIPOINT ((-13816.45 2549666), (-13808.2…
+ 5 Sagaing                       382 MULTIPOINT ((110156.4 2408070), (111663.2 …
+ 6 Katha                         317 MULTIPOINT ((148463.5 2714955), (150398.8 …
+ 7 Kanbalu                       139 MULTIPOINT ((101698.1 2601562), (102031.1 …
+ 8 Kawlin                        103 MULTIPOINT ((127066.5 2635818), (128155.5 …
+ 9 Tamu                           94 MULTIPOINT ((5014.299 2640983), (5024.774 …
+10 Mawlaik                        44 MULTIPOINT ((31003.78 2633018), (31644.76 …
+11 Hkamti                         37 MULTIPOINT ((67907.66 2736622), (68804.11 …
+12 Naga Self-Administered Zone     1                    POINT (137629.2 2914063)</code></pre>
+</div>
+</div>
+<p>From the data we see Shwebo, Yinmarbin, Monywa, Kale, Sagaing and Katha district has a relatively high fatalities of more than 300.</p>
+<p>We would be studying these 6 districts of Sagaing State as analysising the data of the whole Sagaing while more than half the events are hapenning at specific regions might skew the data and lead to a questionable analysis.</p>
+</section>
+<section id="extracting-study-area" class="level3">
+<h3 class="anchored" data-anchor-id="extracting-study-area">4.2 Extracting study area</h3>
+<p>The code chunk below will be used to extract the target districts.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>shwebo <span class="ot">&lt;-</span> sagaing_districts_sf <span class="sc">%&gt;%</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DT <span class="sc">==</span> <span class="st">"Shwebo"</span>)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>yinmarbin <span class="ot">&lt;-</span> sagaing_districts_sf <span class="sc">%&gt;%</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DT <span class="sc">==</span> <span class="st">"Yinmarbin"</span>)</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>monywa <span class="ot">&lt;-</span> sagaing_districts_sf <span class="sc">%&gt;%</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DT <span class="sc">==</span> <span class="st">"Monywa"</span>)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>kale <span class="ot">&lt;-</span> sagaing_districts_sf <span class="sc">%&gt;%</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DT <span class="sc">==</span> <span class="st">"Kale"</span>)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>sagaing <span class="ot">&lt;-</span> sagaing_districts_sf <span class="sc">%&gt;%</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DT <span class="sc">==</span> <span class="st">"Sagaing"</span>)</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>katha <span class="ot">&lt;-</span> sagaing_districts_sf <span class="sc">%&gt;%</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DT <span class="sc">==</span> <span class="st">"Katha"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="converting-sf-objects-into-owin-objects" class="level4">
+<h4 class="anchored" data-anchor-id="converting-sf-objects-into-owin-objects">4.2.1 <strong>Converting sf objects into owin objects</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>shwebo_owin <span class="ot">=</span> <span class="fu">as.owin</span>(shwebo)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>yinmarbin_owin <span class="ot">=</span> <span class="fu">as.owin</span>(yinmarbin)</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>monywa_owin <span class="ot">=</span> <span class="fu">as.owin</span>(monywa)</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>kale_owin <span class="ot">=</span> <span class="fu">as.owin</span>(kale)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>sagaing_owin <span class="ot">=</span> <span class="fu">as.owin</span>(sagaing)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>katha_owin <span class="ot">=</span> <span class="fu">as.owin</span>(katha)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="combining-fatal-event-points-and-the-study-areas" class="level4">
+<h4 class="anchored" data-anchor-id="combining-fatal-event-points-and-the-study-areas">4.2.2 <strong>Combining fatal event points and the study areas</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>shwebo_ppp <span class="ot">=</span> fatal_sagaing_ppp[shwebo_owin]</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>yinmarbin_ppp <span class="ot">=</span> fatal_sagaing_ppp[yinmarbin_owin]</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>monywa_ppp <span class="ot">=</span> fatal_sagaing_ppp[monywa_owin]</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>kale_ppp <span class="ot">=</span> fatal_sagaing_ppp[kale_owin]</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>sagaing_ppp <span class="ot">=</span> fatal_sagaing_ppp[sagaing_owin]</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>katha_ppp <span class="ot">=</span> fatal_sagaing_ppp[katha_owin]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><em>rescale.ppp()</em> function is used to transform the unit of measurement from metre to kilometre.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>shwebo_ppp.km <span class="ot">=</span> <span class="fu">rescale.ppp</span>(shwebo_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>yinmarbin_ppp.km <span class="ot">=</span> <span class="fu">rescale.ppp</span>(yinmarbin_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>monywa_ppp.km <span class="ot">=</span> <span class="fu">rescale.ppp</span>(monywa_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>kale_ppp.km <span class="ot">=</span> <span class="fu">rescale.ppp</span>(kale_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>sagaing_ppp.km <span class="ot">=</span> <span class="fu">rescale.ppp</span>(sagaing_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>katha_ppp.km <span class="ot">=</span> <span class="fu">rescale.ppp</span>(katha_ppp, <span class="dv">1000</span>, <span class="st">"km"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="plot-the-six-study-area-and-the-fatal-conflicts-location" class="level4">
+<h4 class="anchored" data-anchor-id="plot-the-six-study-area-and-the-fatal-conflicts-location">4.2.3 <strong>Plot the six study area and the fatal conflicts location</strong></h4>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Shwebo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">Yinmarbin</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Monywa</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false">Kale</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false">Sagaing</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false">Katha</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(shwebo_ppp.km, <span class="at">main =</span> <span class="st">"Shwebo"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(yinmarbin_ppp.km, <span class="at">main =</span> <span class="st">"Yinmarbin"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(monywa_ppp.km, <span class="at">main =</span> <span class="st">"Monywa"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(kale_ppp.km, <span class="at">main =</span> <span class="st">"Kale"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sagaing_ppp.km, <span class="at">main =</span> <span class="st">"Sagaing"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-33-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(katha_ppp.km, <span class="at">main =</span> <span class="st">"Katha"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-34-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="kernel-density-estimation" class="level3">
+<h3 class="anchored" data-anchor-id="kernel-density-estimation">4.0 Kernel Density Estimation</h3>
+<section id="compute-kde" class="level4">
+<h4 class="anchored" data-anchor-id="compute-kde">4.1 <strong>Compute KDE</strong></h4>
+<p>The code chunk below computes a kernel density by using the following configurations of <a href="https://rdrr.io/cran/spatstat/man/bw.diggle.html"><code>density()</code></a> of <strong>spatstat</strong>:</p>
+<ul>
+<li>We will use 5km as the bandwidth for a clearer KDE contrast.</li>
+</ul>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true">Shwebo</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false">Yinmarbin</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false">Monywa</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-4" role="tab" aria-controls="tabset-2-4" aria-selected="false">Kale</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-5" role="tab" aria-controls="tabset-2-5" aria-selected="false">Sagaing</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-6" role="tab" aria-controls="tabset-2-6" aria-selected="false">Katha</a></li></ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(shwebo_ppp.km, </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">sigma=</span><span class="dv">5</span>, </span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">edge=</span><span class="cn">TRUE</span>, </span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">kernel=</span><span class="st">"gaussian"</span>),</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Shwebo"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(yinmarbin_ppp.km, </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">sigma=</span><span class="dv">5</span>, </span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">edge=</span><span class="cn">TRUE</span>, </span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">kernel=</span><span class="st">"gaussian"</span>),</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Yinmarbin"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(monywa_ppp.km, </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">sigma=</span><span class="dv">5</span>, </span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">edge=</span><span class="cn">TRUE</span>, </span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">kernel=</span><span class="st">"gaussian"</span>),</span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Monywa"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-2-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-4-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(kale_ppp.km, </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">sigma=</span><span class="dv">5</span>, </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">edge=</span><span class="cn">TRUE</span>, </span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">kernel=</span><span class="st">"gaussian"</span>),</span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Kale"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-2-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-5-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(sagaing_ppp.km, </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">sigma=</span><span class="dv">5</span>, </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">edge=</span><span class="cn">TRUE</span>, </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">kernel=</span><span class="st">"gaussian"</span>),</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Sagaing"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-39-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-2-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-6-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(katha_ppp.km, </span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">sigma=</span><span class="dv">5</span>, </span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">edge=</span><span class="cn">TRUE</span>, </span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">kernel=</span><span class="st">"gaussian"</span>),</span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a>     <span class="at">main=</span><span class="st">"Katha"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="second-order-spatial-point-patterns-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="second-order-spatial-point-patterns-analysis">5.0 Second-order Spatial Point Patterns Analysis</h2>
+<section id="analysing-spatial-point-process-using-g-function" class="level4">
+<h4 class="anchored" data-anchor-id="analysing-spatial-point-process-using-g-function">5.1 <strong>Analysing Spatial Point Process Using G-Function</strong></h4>
+<p><em>Gest()</em> of <strong>spatat</strong> package is used to compute G-function. ::: panel-tabset</p>
+</section>
+<section id="shwebo-2" class="level3">
+<h3 class="anchored" data-anchor-id="shwebo-2">Shwebo</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>G_shwebo <span class="ot">=</span> <span class="fu">Gest</span>(shwebo_ppp, <span class="at">correction =</span> <span class="st">"border"</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>G_shwebo.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(shwebo_ppp, Gest, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 999 simulations of CSR  ...
+1, 2, 3, ......10.........20.........30.........40.........50.........60..
+.......70.........80.........90.........100.........110.........120.........130
+.........140.........150.........160.........170.........180.........190........
+.200.........210.........220.........230.........240.........250.........260......
+...270.........280.........290.........300.........310.........320.........330....
+.....340.........350.........360.........370.........380.........390.........400..
+.......410.........420.........430.........440.........450.........460.........470
+.........480.........490.........500.........510.........520.........530........
+.540.........550.........560.........570.........580.........590.........600......
+...610.........620.........630.........640.........650.........660.........670....
+.....680.........690.........700.........710.........720.........730.........740..
+.......750.........760.........770.........780.........790.........800.........810
+.........820.........830.........840.........850.........860.........870........
+.880.........890.........900.........910.........920.........930.........940......
+...950.........960.........970.........980.........990........
+999.
+
+Done.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(G_shwebo.csr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-41-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="yinmarbin-2" class="level3">
+<h3 class="anchored" data-anchor-id="yinmarbin-2">Yinmarbin</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>G_yinmarbin <span class="ot">=</span> <span class="fu">Gest</span>(yinmarbin_ppp, <span class="at">correction =</span> <span class="st">"border"</span>)</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>G_yinmarbin.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(yinmarbin_ppp, Gest, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 999 simulations of CSR  ...
+1, 2, 3, ......10.........20.........30.........40.........50.........60..
+.......70.........80.........90.........100.........110.........120.........130
+.........140.........150.........160.........170.........180.........190........
+.200.........210.........220.........230.........240.........250.........260......
+...270.........280.........290.........300.........310.........320.........330....
+.....340.........350.........360.........370.........380.........390.........400..
+.......410.........420.........430.........440.........450.........460.........470
+.........480.........490.........500.........510.........520.........530........
+.540.........550.........560.........570.........580.........590.........600......
+...610.........620.........630.........640.........650.........660.........670....
+.....680.........690.........700.........710.........720.........730.........740..
+.......750.........760.........770.........780.........790.........800.........810
+.........820.........830.........840.........850.........860.........870........
+.880.........890.........900.........910.........920.........930.........940......
+...950.........960.........970.........980.........990........
+999.
+
+Done.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(G_yinmarbin.csr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-42-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="monywa-2" class="level3">
+<h3 class="anchored" data-anchor-id="monywa-2">Monywa</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>G_monywa <span class="ot">=</span> <span class="fu">Gest</span>(monywa_ppp, <span class="at">correction =</span> <span class="st">"border"</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>G_monywa.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(monywa_ppp, Gest, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 999 simulations of CSR  ...
+1, 2, 3, ......10.........20.........30.........40.........50.........60..
+.......70.........80.........90.........100.........110.........120.........130
+.........140.........150.........160.........170.........180.........190........
+.200.........210.........220.........230.........240.........250.........260......
+...270.........280.........290.........300.........310.........320.........330....
+.....340.........350.........360.........370.........380.........390.........400..
+.......410.........420.........430.........440.........450.........460.........470
+.........480.........490.........500.........510.........520.........530........
+.540.........550.........560.........570.........580.........590.........600......
+...610.........620.........630.........640.........650.........660.........670....
+.....680.........690.........700.........710.........720.........730.........740..
+.......750.........760.........770.........780.........790.........800.........810
+.........820.........830.........840.........850.........860.........870........
+.880.........890.........900.........910.........920.........930.........940......
+...950.........960.........970.........980.........990........
+999.
+
+Done.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(G_monywa.csr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="kale-2" class="level3">
+<h3 class="anchored" data-anchor-id="kale-2">Kale</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>G_kale <span class="ot">=</span> <span class="fu">Gest</span>(kale_ppp, <span class="at">correction =</span> <span class="st">"border"</span>)</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>G_kale.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(kale_ppp, Gest, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 999 simulations of CSR  ...
+1, 2, 3, ......10.........20.........30.........40.........50.........60..
+.......70.........80.........90.........100.........110.........120.........130
+.........140.........150.........160.........170.........180.........190........
+.200.........210.........220.........230.........240.........250.........260......
+...270.........280.........290.........300.........310.........320.........330....
+.....340.........350.........360.........370.........380.........390.........400..
+.......410.........420.........430.........440.........450.........460.........470
+.........480.........490.........500.........510.........520.........530........
+.540.........550.........560.........570.........580.........590.........600......
+...610.........620.........630.........640.........650.........660.........670....
+.....680.........690.........700.........710.........720.........730.........740..
+.......750.........760.........770.........780.........790.........800.........810
+.........820.........830.........840.........850.........860.........870........
+.880.........890.........900.........910.........920.........930.........940......
+...950.........960.........970.........980.........990........
+999.
+
+Done.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb57"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(G_kale.csr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-44-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="sagaing-2" class="level3">
+<h3 class="anchored" data-anchor-id="sagaing-2">Sagaing</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>G_sagaing <span class="ot">=</span> <span class="fu">Gest</span>(sagaing_ppp, <span class="at">correction =</span> <span class="st">"border"</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>G_sagaing.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(sagaing_ppp, Gest, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 999 simulations of CSR  ...
+1, 2, 3, ......10.........20.........30.........40.........50.........60..
+.......70.........80.........90.........100.........110.........120.........130
+.........140.........150.........160.........170.........180.........190........
+.200.........210.........220.........230.........240.........250.........260......
+...270.........280.........290.........300.........310.........320.........330....
+.....340.........350.........360.........370.........380.........390.........400..
+.......410.........420.........430.........440.........450.........460.........470
+.........480.........490.........500.........510.........520.........530........
+.540.........550.........560.........570.........580.........590.........600......
+...610.........620.........630.........640.........650.........660.........670....
+.....680.........690.........700.........710.........720.........730.........740..
+.......750.........760.........770.........780.........790.........800.........810
+.........820.........830.........840.........850.........860.........870........
+.880.........890.........900.........910.........920.........930.........940......
+...950.........960.........970.........980.........990........
+999.
+
+Done.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(G_sagaing.csr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="katha-2" class="level3">
+<h3 class="anchored" data-anchor-id="katha-2">Katha</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>G_katha <span class="ot">=</span> <span class="fu">Gest</span>(katha_ppp, <span class="at">correction =</span> <span class="st">"border"</span>)</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>G_katha.csr <span class="ot">&lt;-</span> <span class="fu">envelope</span>(katha_ppp, Gest, <span class="at">nsim =</span> <span class="dv">999</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generating 999 simulations of CSR  ...
+1, 2, 3, ......10.........20.........30.........40.........50.........60..
+.......70.........80.........90.........100.........110.........120.........130
+.........140.........150.........160.........170.........180.........190........
+.200.........210.........220.........230.........240.........250.........260......
+...270.........280.........290.........300.........310.........320.........330....
+.....340.........350.........360.........370.........380.........390.........400..
+.......410.........420.........430.........440.........450.........460.........470
+.........480.........490.........500.........510.........520.........530........
+.540.........550.........560.........570.........580.........590.........600......
+...610.........620.........630.........640.........650.........660.........670....
+.....680.........690.........700.........710.........720.........730.........740..
+.......750.........760.........770.........780.........790.........800.........810
+.........820.........830.........840.........850.........860.........870........
+.880.........890.........900.........910.........920.........930.........940......
+...950.........960.........970.........980.........990........
+999.
+
+Done.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(G_katha.csr)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>:::</p>
+</section>
+<section id="possible-explanation-of-the-kde-and-2nd-order-spatial-point-patterns-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="possible-explanation-of-the-kde-and-2nd-order-spatial-point-patterns-analysis">6.0 Possible explanation of the KDE and 2nd-Order Spatial Point Patterns Analysis</h3>
+<p><img src="picture/Sagaing_map.jpg" class="img-fluid quarto-figure quarto-figure-center" alt="Figure 1: Map of Sagaing"> We can see that the regions with the highest fatal conflicts in Sagaing State are situated mainly towards south side of the state. All 6 of the study areas we analysed are at the south side of Sagaing State, that shows high fatal conflict occurrences that was associated to the Military Forces of Myanmar, which came at no surprise.</p>
+<p>The South part of Sagaing State neighbor the Shan State, and both regions are filled with vasts agriculture land. In times of uncertainties and civil war, everyone would head to the source of food to ensure that they have enough food while their “enemy” has as little as possible.</p>
+<p>It is also visible that there is a trend of more fatal conflicts happening near borders of districts, this could be due to borders are usually further away from the main settlement or urban centers, which prevent injured individuals from getting help. The Military Forces of Myanmar are also known to camp at borders, which could also explain why most fatal conflicts with the military happens near borders of districts.</p>
+<p>Additionally, 2nd-Order Spatial Point Patterns Analysis using G-Function shows that the fatal conflict distribution was not randomly distributed. Hence, it is of some truth that fatal conflicts that involves the Military Forces of Myanmar are due to plans by them to take control over certain parts of Myanmar, especially at the south regions of the Sagaing state.</p>
+</section>
+</section>
+<section id="spatio-temporal-point-patterns-analysis" class="level2">
+<h2 class="anchored" data-anchor-id="spatio-temporal-point-patterns-analysis">7.0 Spatio-Temporal Point Patterns Analysis</h2>
+<section id="study-area-sagaing-state" class="level3">
+<h3 class="anchored" data-anchor-id="study-area-sagaing-state">7.1 Study area (Sagaing State)</h3>
+<p>We would be analysing Sagaing State as a whole for Spatio-Temporal Point Patterns Analysis. To see what are the movements of the fatal conflicts involving the Military Forces of Myanmar looks like.</p>
+</section>
+<section id="visualising-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing" class="level3">
+<h3 class="anchored" data-anchor-id="visualising-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing">7.2 Visualising Distribution of fatal conflicts associated with the Military Forces of Myanmar in Sagaing</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">'plot'</span>)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(sagaing_districts_sf) <span class="sc">+</span></span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Distribution of Sagaing fatal events"</span>,</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">main.title.position =</span> <span class="st">"center"</span>,</span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">main.title.size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb64-7"><a href="#cb64-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(sagaing_fatal_conflict_sf) <span class="sc">+</span></span>
+<span id="cb64-8"><a href="#cb64-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_dots</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="visualising-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing-by-quarter" class="level3">
+<h3 class="anchored" data-anchor-id="visualising-distribution-of-fatal-conflicts-associated-with-the-military-forces-of-myanmar-in-sagaing-by-quarter">7.3 Visualising Distribution of fatal conflicts associated with the Military Forces of Myanmar in Sagaing by quarter</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tmap_mode</span>(<span class="st">'plot'</span>)</span>
+<span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(sagaing_districts_sf) <span class="sc">+</span></span>
+<span id="cb65-3"><a href="#cb65-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_polygons</span>() <span class="sc">+</span></span>
+<span id="cb65-4"><a href="#cb65-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">tm_layout</span>(<span class="at">main.title =</span> <span class="st">"Distribution of Sagaing fatal events"</span>,</span>
+<span id="cb65-5"><a href="#cb65-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">main.title.position =</span> <span class="st">"center"</span>,</span>
+<span id="cb65-6"><a href="#cb65-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">main.title.size =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb65-7"><a href="#cb65-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_shape</span>(sagaing_fatal_conflict_sf) <span class="sc">+</span></span>
+<span id="cb65-8"><a href="#cb65-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_dots</span>() <span class="sc">+</span></span>
+<span id="cb65-9"><a href="#cb65-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_facets</span>(<span class="at">by=</span><span class="st">"quarter"</span>, </span>
+<span id="cb65-10"><a href="#cb65-10" aria-hidden="true" tabindex="-1"></a>            <span class="at">free.coords=</span><span class="cn">FALSE</span>, </span>
+<span id="cb65-11"><a href="#cb65-11" aria-hidden="true" tabindex="-1"></a>            <span class="at">drop.units =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-48-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="computing-stkde-by-quarter" class="level3">
+<h3 class="anchored" data-anchor-id="computing-stkde-by-quarter">7.4 Computing STKDE by Quarter</h3>
+<p>We will be computing STKDE by using <em>spattemp.density()</em> of <strong>sparr</strong> package.</p>
+<section id="extracting-fatal-conflicts-by-quarter" class="level4">
+<h4 class="anchored" data-anchor-id="extracting-fatal-conflicts-by-quarter">7.4.1 <strong>Extracting fatal conflicts by quarter</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>sagaing_fatal_quarter <span class="ot">&lt;-</span> sagaing_fatal_conflict_sf <span class="sc">%&gt;%</span></span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(quarter, geometry)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="creating-ppp" class="level4">
+<h4 class="anchored" data-anchor-id="creating-ppp">7.4.2 <strong>Creating ppp</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>sagaing_fatal_quarter_ppp <span class="ot">&lt;-</span> <span class="fu">as.ppp</span>(sagaing_fatal_quarter)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>sagaing_fatal_quarter_ppp</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marked planar point pattern: 3375 points
+marks are numeric, of storage type  'double'
+window: rectangle = [-13816.45, 252995.48] x [2393568.1, 2914062.9] units</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sagaing_fatal_quarter_ppp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marked planar point pattern:  3375 points
+Average intensity 2.430257e-08 points per square unit
+
+*Pattern contains duplicated points*
+
+Coordinates are given to 13 decimal places
+
+marks are numeric, of type 'double'
+Summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   4.000   7.000   6.699   9.000  12.000 
+
+Window: rectangle = [-13816.45, 252995.48] x [2393568.1, 2914062.9] units
+                    (266800 x 520500 units)
+Window area = 1.38874e+11 square units</code></pre>
+</div>
+</div>
+</section>
+<section id="check-for-duplicates-1" class="level4">
+<h4 class="anchored" data-anchor-id="check-for-duplicates-1">7.4.3 <strong>Check for duplicates</strong></h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">any</span>(<span class="fu">duplicated</span>(sagaing_fatal_quarter_ppp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] TRUE</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">multiplicity</span>(sagaing_fatal_quarter_ppp) <span class="sc">&gt;</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1867</code></pre>
+</div>
+</div>
+<p>The output shows 1867 duplicated point event. Use the jittering approach to remove duplicates.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>sagaing_fatal_quarter_ppp_jit <span class="ot">&lt;-</span> <span class="fu">rjitter</span>(sagaing_fatal_quarter_ppp, </span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>                             <span class="at">retry=</span><span class="cn">TRUE</span>, </span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>                             <span class="at">nsim=</span><span class="dv">1</span>, </span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>                             <span class="at">drop=</span><span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="combine-sagaing_fatal_quarter_ppp-and-sagaing_boundary_owin" class="level4">
+<h4 class="anchored" data-anchor-id="combine-sagaing_fatal_quarter_ppp-and-sagaing_boundary_owin">7.4.4 ** Combine <code>sagaing_fatal_quarter_ppp</code> and <code>sagaing_boundary_owin</code> **</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>sagaing_fatal_quarter_owin <span class="ot">&lt;-</span> sagaing_fatal_quarter_ppp_jit[sagaing_boundary_owin]</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sagaing_fatal_quarter_owin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Marked planar point pattern:  3371 points
+Average intensity 3.590946e-08 points per square unit
+
+Coordinates are given to 15 decimal places
+
+marks are numeric, of type 'double'
+Summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   4.000   7.000   6.699   9.000  12.000 
+
+Window: polygonal boundary
+single connected closed polygon with 5882 vertices
+enclosing rectangle: [-17699.96, 308341.37] x [2390344.6, 3029739.1] units
+                     (326000 x 639400 units)
+Window area = 9.3875e+10 square units
+Fraction of frame area: 0.45</code></pre>
+</div>
+</div>
+<p>Plot the combine owin</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sagaing_fatal_quarter_owin)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-56-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="computing-spatio-temporal-kde" class="level4">
+<h4 class="anchored" data-anchor-id="computing-spatio-temporal-kde">7.4.5 <strong>Computing Spatio-temporal KDE</strong></h4>
+<p>We use <code>spattemp.density()</code> of sparr package is used to compute the STKDE.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>st_kde <span class="ot">&lt;-</span> <span class="fu">spattemp.density</span>(sagaing_fatal_quarter_owin)</span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(st_kde)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Spatiotemporal Kernel Density Estimate
+
+Bandwidths
+  h = 20483.04 (spatial)
+  lambda = 0.0259 (temporal)
+
+No. of observations
+  3371 
+
+Spatial bound
+  Type: polygonal
+  2D enclosure: [-17699.96, 308341.4] x [2390345, 3029739]
+
+Temporal bound
+  [1, 12]
+
+Evaluation
+  128 x 128 x 12 trivariate lattice
+  Density range: [0, 2.092708e-10]</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="plotting-the-spatio-temporal-kde-object" class="level3">
+<h3 class="anchored" data-anchor-id="plotting-the-spatio-temporal-kde-object">7.5 Plotting the spatio-temporal KDE object</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>tims <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">7</span>,<span class="dv">8</span>,<span class="dv">9</span>,<span class="dv">10</span>,<span class="dv">11</span>,<span class="dv">12</span>)</span>
+<span id="cb81-2"><a href="#cb81-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfcol=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">3</span>))</span>
+<span id="cb81-3"><a href="#cb81-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> tims){ </span>
+<span id="cb81-4"><a href="#cb81-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(st_kde, i, </span>
+<span id="cb81-5"><a href="#cb81-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">override.par=</span><span class="cn">FALSE</span>, </span>
+<span id="cb81-6"><a href="#cb81-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">fix.range=</span><span class="cn">TRUE</span>, </span>
+<span id="cb81-7"><a href="#cb81-7" aria-hidden="true" tabindex="-1"></a>       <span class="at">main=</span><span class="fu">paste</span>(<span class="st">"KDE at quarter"</span>,i))</span>
+<span id="cb81-8"><a href="#cb81-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-58-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="the01_files/figure-html/unnamed-chunk-58-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="possible-explanation-of-the-spatio-temporal-kde-and-2nd-order-spatial-point-patterns-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="possible-explanation-of-the-spatio-temporal-kde-and-2nd-order-spatial-point-patterns-analysis">8.0 Possible explanation of the Spatio-temporal KDE and 2nd-Order Spatial Point Patterns Analysis</h3>
+<p>We can see that from the Spatio-temporal KDE, other than 2021 Q2 and 2022 Q1, there seems to be some level of fatal conflicts happening at the Southern side of Sagaing state. It is also quite obvious that throughout the quarters, most of the fatal conflicts happen at the border of Sagaing state. Which was also identified during the static analysis of KDE within the Southern region of Sagaing State.</p>
+<p>Another interesting finding is that, fatal conflicts in Sagaing State seems to be lower generally during Q2 and Q3 and more dense during Q1 and Q4, with the year 2022 being an exception. A potential reason for such trend could be due to the fact that most of the rice are harvested during mid-October of the year, with the second greater rice harvest during March. If the case that the Military Forces of Myanmar are getting into fatal conflicts for the control of agriculture land is true, the data would make a lot of sense as to why there is a spike in fatal conflicts during these periods.</p>
+<p>Another reason to potentially justify the lesser density of fatal conflicts within Sagaing State in 2022 could be due to the fact that in 2022, the Military Forces of Myanmar intensified their military operations against the ethic armed group in some areas, including the neighboring Chin State. Where more militants are likely to relocate from within or around Sagaing State to the neighboring Chin State, to help with the military operations against the ethic armed group in that region.</p>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">9.0 Conclusion</h3>
+<p>In conclusion, the spatio-temporal analysis of armed conflict in Myanmar, employing Kernel Density Estimation (KDE) and spatial point patterns analysis, offers a comprehensive understanding of the conflict’s complex dynamics. By examining the spatial distribution, temporal patterns, and underlying drivers, this study provides valuable insights for policymakers, humanitarian organisations, and peacebuilding initiatives.</p>
+<p>Although there is limited data available regarding the actual intention of parties in conflicts and wars, and sources that report about tensions can sometimes be very bias. Data and findings can help us to make educated guess as to what is happening. In this assignment, the findings underscore the multifaceted nature of the conflict, influenced by the military’s strategic objectives, resource considerations, and broader geopolitical factors. The ongoing civil war, characterised by displacement, humanitarian crises, and human rights violations, is a direct consequence of these underlying dynamics.</p>
+<p>KDE, through its visualisation capabilities, provides a visual representation of conflict intensity, aiding in identifying areas of high and low conflict risk. Spatial point patterns analysis, on the other hand, delves deeper into the underlying spatial and temporal dynamics, revealing patterns and trends that may not be immediately apparent.</p>
+<p>The combination of these methods offers a more comprehensive understanding of the conflict’s complexities, enabling policymakers to make informed decisions regarding resource allocation, conflict prevention strategies, and humanitarian interventions. By addressing the root causes of the conflict and promoting sustainable peace, it is possible to mitigate the suffering of millions affected by this ongoing crisis.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

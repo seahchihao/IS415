@@ -1,0 +1,198 @@
+---
+title: "In-Class Exercise 06"
+author: "Seah Chi Hao"
+date: 2024-09-23
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  freeze: true
+  output: true
+  warning: false
+---
+
+## 1.0 Installing and Loading the R Packages
+
+Install the following packages:
+
+-   sf
+-   sfdep
+-   tmap
+-   tidyverse
+
+```{r}
+pacman::p_load(sf, tmap, sfdep, tidyverse)
+```
+
+## 2.0 Preparing the Data
+
+-   Import Hunan shapefile and parse it into a sf polygon feature object.
+
+```{r}
+hunan <- st_read(dsn = "data/geospatial", 
+                 layer = "Hunan") #good practice is to always transform the data into projection
+```
+
+-   Import Hunan_2012.csv file parse it into a tibble data.frame.
+
+```{r}
+hunan2012 <- read_csv("data/aspatial/Hunan_2012.csv")
+```
+
+```{r}
+hunan_GDPPC <- left_join(hunan,hunan2012)%>%
+    select(1:4, 7, 15) 
+```
+
+## 3.0 Global Measure of Spatial Association
+
+### 3.1 Step 1: Deriving Queen's contiguity weights: sfdep methods
+
+```{r}
+wm_q <- hunan_GDPPC %>%
+  mutate(nb = st_contiguity(geometry),
+         wt = st_weights(nb,
+                         style = "W"),
+         .before = 1) #this insert the new columns created at the front
+```
+
+### 3.2 Computing Global Moran's I
+
+In the code chunk below, global_moran() function is used to compute the Moran's I value. Different from spdep package, the output is a tibble data.frame.
+
+```{r}
+moranI <- global_moran(wm_q$GDPPC,
+                       wm_q$nb,
+                       wm_q$wt)
+glimpse(moranI)
+```
+
+### 3.3 Performing Global Moran's I test
+
+In general, Moran's I test will be performed instead of just computing the Moran's I statistics. With sfdep package, Moran's I test can be performed by using `global_moran_test()` as shown in the code below.
+
+```{r}
+global_moran_test(wm_q$GDPPC,
+                  wm_q$nb,
+                  wm_q$wt)
+```
+
+### 3.4 Performing Global Moran's I permutation test
+
+In practice, Monte carlo simulation should be used to perform the statistical test. For **sfdep**, it is supported by `global_moran_test()`.
+
+::: panel-tabset
+### Step 1
+
+It is always a good practice to use `set.seed()` before performing simulation. This is to ensure that the computation is reproducible.
+
+```{r}
+set.seed(1234)
+```
+
+### Step 2
+
+Next, `global_moran_perm()` is used to perform Monte Carlo simulation.
+
+```{r}
+global_moran_perm(wm_q$GDPPC,
+                  wm_q$nb,
+                  wm_q$wt,
+                  nsim = 99)
+```
+:::
+
+## 4.0 Local Measure of Spatial Association
+
+### 4.1 Computing Local Moran's I
+
+Compute Local Moran's I of GDPPC at county level by using `local_moran()` of sfdep package.
+```{r}
+lisa <- wm_q %>%
+  mutate(local_moran = local_moran(
+    GDPPC, nb, wt, nsim = 99),
+    .before = 1) %>%
+  unnest(local_moran)
+```
+
+> Note:
+From the output `lisa` ii is the local Moran's I value
+mean.median, pysal - for labelling
+
+### 4.2 Visualising Local Moran's I and p-value
+```{r}
+tmap_mode("plot")
+map1 <- tm_shape(lisa) + 
+  tm_fill("ii") +
+  tm_borders(alpha = 0.5) +
+  tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(
+    main.title = "local Moran's I of GDPPC",
+    main.title.size = 1.5)
+    
+map2 <- tm_shape(lisa) + 
+  tm_fill("p_ii",
+          breaks = c(0, 0.001, 0.01, 0.05, 1),
+          labels = c("0.001", "0.01", "0.05", "Not sig")) +
+  tm_borders(alpha = 0.5) +
+  tm_view(set.zoom.limits = c(6,8)) +
+  tm_layout(
+    main.title = "p-value of local Moran's I",
+    main.title.size = 1.5)
+
+tmap_arrange(map1, map2, ncol = 2)
+```
+
+### 4.3 Visualising LISA map
+
+In lisa sf data.frame, we can find three fields contain the LISA catagories, they are *mean*, *median* and *pysal*. In general, classification in *mean* will be used as shown in the code chunk below.
+```{r}
+lisa_sig <- lisa %>%
+  filter(p_ii < 0.05)
+tmap_mode("plot")
+tm_shape(lisa) +
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+  tm_shape(lisa_sig) +
+  tm_fill("mean") +
+  tm_borders(alpha = 0.4)
+
+```
+
+### 4.4 Computing local Gi* stastics
+
+```{r}
+wm_idw <- hunan_GDPPC %>%
+  mutate(nb = st_contiguity(geometry),
+         wts = st_inverse_distance(nb, geometry,
+                                   scale = 1,
+                                   alpha = 1),
+         .before = 1)
+```
+
+```{r}
+HCSA <- wm_idw %>%
+  mutate(local_Gi = local_gstar_perm(
+    GDPPC, nb, wt, nsim = 99),
+    .before = 1) %>%
+  unnest(local_Gi)
+HCSA
+```
+> Note: Gstat Hot Spot & Cold Spot terms are used
+
+
+### 4.5 Visualising local HSCA
+
+Plot the significant (i.e. p-values less than 0.05) hot spot and cold spot areas by using appropraite tmap functions as shown below.
+```{r}
+HCSA_sig <- HCSA %>%
+  filter(p_sim < 0.05)
+tmap_mode("plot")
+tm_shape(HCSA) +
+  tm_polygons() +
+  tm_borders(alpha = 0.5) +
+  tm_shape(HCSA_sig) +
+  tm_fill("gi_star") +
+  tm_borders(alpha = 0.4)
+```
+

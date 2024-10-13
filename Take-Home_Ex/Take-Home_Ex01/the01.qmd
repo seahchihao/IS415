@@ -28,7 +28,7 @@ We would be zooming into the world's longest civil war in Myanmar by using relev
 #### 1.2.1 **Armed Conflict Data**
 We would be getting Myanmar armed conflict data (2021 to June 2024) from [Armed Conflict Location & Event Data (ACLED)](https://acleddata.com/), an independent, impartial, international non-profit organization collecting data on violent conflict and protest in all countries and territories in the world.
 
-#### **1.2.2 GIS Data**
+#### 1.2.2 **GIS Data**
 We would get our relevant administrative boundary GIS Data from [Myanmar Information Management Unit, MIMU](http://www.themimu.info/).
 
 

@@ -1,0 +1,13 @@
+---
+title: "In-Class Exercise 07"
+author: "Seah Chi Hao"
+date: 2024-10-14
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  freeze: true
+  output: true
+  warning: false
+---
+

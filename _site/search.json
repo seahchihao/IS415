@@ -1012,6 +1012,62 @@
     "href": "In-Class_Ex/In-Class_Ex07/ice07.html",
     "title": "In-Class Exercise 07",
     "section": "",
-    "text": "Some learning from this lesson: Look deeply into the data and is there assuptions or outliers (e.g. more data due to higher population), and how to counter these to ensure a more interesting analysis? (i.e. take data per capita, to find out the true distribution of data, not affected by poplation size) Stadardisation techniques can also be used, depending on context. (z-score, min-max, decimal-scaling)\n\nNo linear relationship != no relationship"
+    "text": "Some learning from last lesson: Look deeply into the data and is there assuptions or outliers (e.g. more data due to higher population), and how to counter these to ensure a more interesting analysis? (i.e. take data per capita, to find out the true distribution of data, not affected by poplation size) Stadardisation techniques can also be used, depending on context. (z-score, min-max, decimal-scaling)\n\nNo linear relationship != no relationship\n\nBelow is In-Class Ex08"
+  },
+  {
+    "objectID": "In-Class_Ex/In-Class_Ex09/ice09.html",
+    "href": "In-Class_Ex/In-Class_Ex09/ice09.html",
+    "title": "In-Class Exercise 07",
+    "section": "",
+    "text": "Some learning from last lesson: Look deeply into the data and is there assuptions or outliers (e.g. more data due to higher population), and how to counter these to ensure a more interesting analysis? (i.e. take data per capita, to find out the true distribution of data, not affected by poplation size) Stadardisation techniques can also be used, depending on context. (z-score, min-max, decimal-scaling)\nNo linear relationship != no relationship\nBelow is In-Class Ex09"
+  },
+  {
+    "objectID": "In-Class_Ex/In-Class_Ex09/ice09.html#installing-and-loading-the-r-packages",
+    "href": "In-Class_Ex/In-Class_Ex09/ice09.html#installing-and-loading-the-r-packages",
+    "title": "In-Class Exercise 07",
+    "section": "1.0 Installing and Loading the R Packages",
+    "text": "1.0 Installing and Loading the R Packages\nInstall the following packages:\n\nspdep\nsp\ntmap\nsf\nClustGeo\ncluster\nfactoextra\nNbClust\ntidyverse\nGGally\n\n\npacman::p_load(spdep, sp, tmap, sf, ClustGeo, \n               cluster, factoextra, NbClust,\n               tidyverse, GGally)"
+  },
+  {
+    "objectID": "In-Class_Ex/In-Class_Ex09/ice09.html#preparing-the-data",
+    "href": "In-Class_Ex/In-Class_Ex09/ice09.html#preparing-the-data",
+    "title": "In-Class Exercise 07",
+    "section": "2.0 Preparing the Data",
+    "text": "2.0 Preparing the Data\n\nImport the relevant data (intermediate data derived from Hands-On).\n\n\nshan_sf &lt;- read_rds(\"data/rds/shan_sf.rds\")\nshan_ict &lt;- read_rds(\"data/rds/shan_ict.rds\")\nshan_sf_cluster &lt;- read_rds(\"data/rds/shan_sf_cluster.rds\")"
+  },
+  {
+    "objectID": "In-Class_Ex/In-Class_Ex09/ice09.html#conventional-hierarchical-clustering",
+    "href": "In-Class_Ex/In-Class_Ex09/ice09.html#conventional-hierarchical-clustering",
+    "title": "In-Class Exercise 07",
+    "section": "3.0 Conventional Hierarchical Clustering",
+    "text": "3.0 Conventional Hierarchical Clustering\n\n3.1 Hierarchical Clustering\n\nproxmat &lt;- dist(shan_ict, method = 'euclidean') \n#able to have the option to select certain columns/variables in the data\n#do print(proxmat) in the console to see the output // for checking purpose\nhclust_ward &lt;- hclust(proxmat, method = 'ward.D')\n#hclust_ward is an hclust object // check with class(hclust_wards)\ngroups &lt;- as.factor(cutree(hclust_ward, k=6))\n#for clustering always min 3\n\n\n\n3.2 Append to the geospatial data\n\nshan_sf_cluster &lt;- cbind(shan_sf,\n                         as.matrix(groups)) %&gt;%\n  rename(`CLUSTER` = `as.matrix.groups.`) %&gt;% #use ` not ' is there any reason? // the . is very impt\n  select(-c(3:4, 7:9)) %&gt;%\n  rename(TS = TS.x)\n\n\n\n3.3 The dendrogram\n\nplot(hclust_ward, cex = 0.6)\nrect.hclust(hclust_ward, k = 6, border = 2:5)\n\n\n\n\n\n\n\n\n\n\n3.4 Cluster map\n\nqtm(shan_sf_cluster, \"CLUSTER\")\n\n\n\n\n\n\n\n#R only has 16 colours on default, beyond that we have to manually create a new colour"
+  },
+  {
+    "objectID": "In-Class_Ex/In-Class_Ex09/ice09.html#spatially-contrained-clustering-skater-method",
+    "href": "In-Class_Ex/In-Class_Ex09/ice09.html#spatially-contrained-clustering-skater-method",
+    "title": "In-Class Exercise 07",
+    "section": "4.0 Spatially Contrained Clustering: SKATER method",
+    "text": "4.0 Spatially Contrained Clustering: SKATER method\nSKATER (Spatial ’K”luster Analysis by Tree Edge Removal algorithm) -&gt; get minimum spanning tree\n\n4.1 Step 1: Computing nearest neighbours\n\nshan.nb &lt;- poly2nb(shan_sf)\nsummary(shan.nb)\n\nNeighbour list object:\nNumber of regions: 55 \nNumber of nonzero links: 264 \nPercentage nonzero weights: 8.727273 \nAverage number of links: 4.8 \nLink number distribution:\n\n 2  3  4  5  6  7  8  9 \n 5  9  7 21  4  3  5  1 \n5 least connected regions:\n3 5 7 9 47 with 2 links\n1 most connected region:\n8 with 9 links\n\n\n\n\n4.2 Step 2: Visualising the neighbours\n\nplot(st_geometry(shan_sf),\n     border=grey(.5))\n\n\n\n\n\n\n\npts &lt;- st_coordinates((st_centroid(shan_sf)))\nplot(shan.nb,\n     pts,\n     col=\"blue\",\n     ass=TRUE)\n\n\n\n\n\n\n\n\n\n\n4.3 Step 3: Computing minimum spanning tree\n\n4.3.1 Calculate edge costs\n\nlcosts &lt;- nbcosts(shan.nb, shan_ict)\n\n\n\n4.3.2 Incorporating theses costs into a weights object\n\nshan.w &lt;- nb2listw(shan.nb,\n                   lcosts,\n                   style = \"B\") #hardcode the binary // not everything allow user to change\nsummary(shan.w)\n\nCharacteristics of weights list object:\nNeighbour list object:\nNumber of regions: 55 \nNumber of nonzero links: 264 \nPercentage nonzero weights: 8.727273 \nAverage number of links: 4.8 \nLink number distribution:\n\n 2  3  4  5  6  7  8  9 \n 5  9  7 21  4  3  5  1 \n5 least connected regions:\n3 5 7 9 47 with 2 links\n1 most connected region:\n8 with 9 links\n\nWeights style: B \nWeights constants summary:\n   n   nn       S0       S1        S2\nB 55 3025 76267.65 58260785 522016004\n\n\n\n\n4.3.3 Computing MST\n\nshan.mst &lt;- mstree(shan.w)\n\n\n\n4.3.4 Visualising MST\n\nplot(st_geometry(shan_sf),\n     border=gray(.5))\nplot.mst(shan.mst,\n         pts,\n         col=\"blue\",\n         cex.lab=0.7,\n         cex.circles=0.005,\n         add=TRUE)\n\n\n\n\n\n\n\n\n\n\n\n4.4 Getting the skater tree\n\nskater.clust6 &lt;- skater(edges = shan.mst[,1:2],\n                        data = shan_ict,\n                        method = \"euclidean\",\n                        ncuts = 5) #note that n is 5 for cluster 6 \n                                  #this is because the code start from 0 (we can do n-1 where n is the user input to not confuse the user)\n\nPlot the SKATER Tree\n\nplot(st_geometry(shan_sf), #for outline using st_geometry would be good\n     border=gray(.5))\nplot(skater.clust6,\n     pts,\n     cex.lab=.7,\n     groups.colours=c(\"red\",\"green\",\"blue\",\"brown\",\"pink\"),\n     cex.circles=0.005,\n     add=TRUE) #this line means plot this part of the code over the previous code (the outline)\n\n\n\n\n\n\n\n\n\n\n4.5 Visualising the clusters in choropleth map\n\ngroups_mat &lt;- as.matrix(skater.clust6$groups)\nshan_sf_spatialcluster &lt;- cbind(shan_sf_cluster, as.factor(groups_mat)) %&gt;% #as.factor organise it ascending from 1 to 6\n  rename(`skater_CLUSTER` = `as.factor.groups_mat.`)\nqtm(shan_sf_spatialcluster, \"skater_CLUSTER\")"
+  },
+  {
+    "objectID": "In-Class_Ex/In-Class_Ex09/ice09.html#spatially-contrained-clustering-clustgeo-method",
+    "href": "In-Class_Ex/In-Class_Ex09/ice09.html#spatially-contrained-clustering-clustgeo-method",
+    "title": "In-Class Exercise 07",
+    "section": "5.0 Spatially Contrained Clustering: ClustGeo method",
+    "text": "5.0 Spatially Contrained Clustering: ClustGeo method\n\n5.1 Computing spatial distance matrix\nIn the code chunk below, st_distance() of sf package is used to compute the distance matrix\n\ndist &lt;- st_distance(shan_sf, shan_sf)\ndistmat &lt;- as.dist(dist)\n\n\n\n5.2 The cluster graphs\n\ncr &lt;- choicealpha(proxmat, distmat,\n                  range.alpha = seq(0, 1, 0.1),\n                  K=6, graph = TRUE)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNote: Output 2 graphs: one absoulte and one standardised. We are usually more interest in the graph with the absolute value.\n\n\n\n5.3 Saving clustGeo output\n\nclustG &lt;- hclustgeo(proxmat, distmat, alpha = 0.2)\ngroups &lt;- as.factor(cutree(clustG, k=6))\nshan_sf_clustGeo &lt;- cbind(shan_sf,\n                          as.matrix(groups)) %&gt;%\n  rename(`clustGeo` = `as.matrix.groups.`)\n\n\n\n5.4 Visualising the clustGeo map\n\nqtm(shan_sf_clustGeo, \"clustGeo\")"
+  },
+  {
+    "objectID": "In-Class_Ex/In-Class_Ex09/ice09.html#comparing-cluster-maps",
+    "href": "In-Class_Ex/In-Class_Ex09/ice09.html#comparing-cluster-maps",
+    "title": "In-Class Exercise 07",
+    "section": "6.0 Comparing cluster maps",
+    "text": "6.0 Comparing cluster maps\n\ntmap_mode(\"plot\")\nmap1 &lt;- qtm(shan_sf_cluster, \"CLUSTER\")\n    \nmap2 &lt;- qtm(shan_sf_spatialcluster, \"skater_CLUSTER\")\n\nmap3 &lt;- qtm(shan_sf_clustGeo, \"clustGeo\")\n\ntmap_arrange(map1, map2, map3, ncol = 3)\n\n\n\n\n\n\n\n\n\nNote: Method (SKATER or clustGeo) to use depends Clustering is multi-variate analysis, compared to single-variate analysis of LISA and G* I of Take-Home 2"
+  },
+  {
+    "objectID": "In-Class_Ex/In-Class_Ex09/ice09.html#characterising-the-clusters",
+    "href": "In-Class_Ex/In-Class_Ex09/ice09.html#characterising-the-clusters",
+    "title": "In-Class Exercise 07",
+    "section": "7.0 Characterising the clusters",
+    "text": "7.0 Characterising the clusters\n\nggparcoord(data = shan_sf_clustGeo,\n           columns = c(17:21),\n           scale = \"globalminmax\",\n           alphaLines = 0.2,\n           boxplot = TRUE,\n           title = \"Multiple Parallel Coordinates Plots of ICT Variables by Cluster\") +\n  facet_grid(~ clustGeo) +\n  theme(axis.test.x = element_text(angle = 30))"
   }
 ]

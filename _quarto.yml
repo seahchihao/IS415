@@ -40,6 +40,8 @@ website:
             href: "In-Class_Ex/In-Class_Ex05/ice05.html"
           - text: In-Class Exercise 6
             href: "In-Class_Ex/In-Class_Ex06/ice06.html"
+          - text: In-Class Exercise 9
+            href: "In-Class_Ex/In-Class_Ex09/ice09.html"
             
       - text: Take-Home Exercise
         menu:

@@ -1,0 +1,245 @@
+---
+title: "In-Class Exercise 10"
+author: "Seah Chi Hao"
+date: 2024-10-28
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  freeze: true
+  output: true
+  warning: false
+---
+
+## 1.0 Installing and Loading the R Packages
+
+Install the following packages:
+
+- olsrr
+- ggstatsplot
+- sf
+- tmap
+- tidyverse
+- gtsummary
+- performance
+- see
+- sfdep
+
+```{r}
+pacman::p_load(olsrr, ggstatsplot, sf, 
+               tmap, tidyverse, gtsummary,
+               performance, see, sfdep)
+```
+
+## 2.0 Importing the Data
+```{r}
+condo_resale <- read_csv("data/aspatial/Condo_resale_2015.csv")
+
+# mpsz <- read_rds("data/rds/mpsz.rds")
+mpsz = st_read(dsn = "data/geospatial", layer = "MP14_SUBZONE_WEB_PL")
+
+#condo_resale_sf <- read_rds("data/rds/condo_resale_sf.rds")
+condo_resale_sf <- st_as_sf(condo_resale,
+                            coords = c("LONGITUDE", "LATITUDE"),
+                            crs=4326) %>%
+  st_transform(crs=3414)
+```
+
+## 3.0 Correlation Analysis - ggstatsplot methods
+Correlation matrix is an effective graphical method for checking if there are pair independent variable with high correlation. In the code chunk below, `ggcorrmat()` of **ggstatsplot** is used to plot the correlation matrix.
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+ggcorrmat(condo_resale[, 5:23])
+```
+
+## 4.0 Building a Hendodic Pricing Model by using the Multiple Linear Regression Method
+```{r}
+condo_mlr <- lm(formula = SELLING_PRICE ~ AREA_SQM + 
+                  AGE	+ PROX_CBD + PROX_CHILDCARE + 
+                  PROX_ELDERLYCARE + PROX_URA_GROWTH_AREA + 
+                  PROX_HAWKER_MARKET	+ PROX_KINDERGARTEN	+ 
+                  PROX_MRT	+ PROX_PARK	+ PROX_PRIMARY_SCH + 
+                  PROX_TOP_PRIMARY_SCH + PROX_SHOPPING_MALL	+ 
+                  PROX_SUPERMARKET + PROX_BUS_STOP	+
+                  NO_Of_UNITS + FAMILY_FRIENDLY +
+                  FREEHOLD + LEASEHOLD_99YR, #note need the ',' before data
+                data=condo_resale_sf)
+summary(condo_mlr)
+```
+>Note:
+negative value means overestimating (it is negative when y^ > y) refer to slide 6 of lesson 10 (week 11)
+
+## 5.0 Generating tidy linear regression report
+In this InClass, we will be using olsrr packages for:
+
+- comprehensive regression output
+- variable selection procedures
+
+```{r}
+olssr_condo <- ols_regress(condo_mlr)
+olssr_condo
+```
+>Note:
+What is generated is an object, the actual model is within the object
+
+## 6.0 Variable selection
+
+### 6.1 Forward stepwise
+
+::: panel-tabset
+
+### summary
+```{r}
+condo_fw_mlr <- ols_step_forward_p(
+  condo_mlr,
+  p_val = 0.05,
+  details = FALSE) #basic or detailed report
+condo_fw_mlr
+```
+### plot
+```{r}
+plot(condo_fw_mlr)
+```
+
+:::
+
+### 6.2 Backward stepwise
+
+::: panel-tabset
+
+### summary
+```{r}
+condo_bw_mlr <- ols_step_backward_p(
+  condo_mlr,
+  p_val = 0.05,
+  details = FALSE) #basic or detailed report
+condo_bw_mlr
+```
+### plot
+```{r}
+plot(condo_bw_mlr)
+```
+
+:::
+
+### 6.3 Stepwise (bidirectional)
+
+::: panel-tabset
+
+### summary
+```{r}
+condo_sb_mlr <- ols_step_both_p(
+  condo_mlr,
+  p_val = 0.05,
+  details = FALSE) #basic or detailed report
+condo_sb_mlr
+```
+
+### plot
+```{r}
+plot(condo_sb_mlr)
+```
+
+:::
+
+## 7.0 Model selection
+
+### 7.1 Comparing performace
+
+In the code chunk below, `compare_performance()` of **performance** package is used to compare the performance of the models.
+```{r}
+metric <- compare_performance(condo_mlr,
+                              condo_fw_mlr$model,
+                              condo_bw_mlr$model,
+                              condo_sb_mlr$model)
+```
+
+In the code chunk below, `gsub()` is used to tidy the test value in *Name* field.
+```{r}
+metric$Name <- gsub(".*\\\\([a-zA-Z0-9_]+)\\\\, \\\\model\\\\.*", "\\1", metric$Name)
+```
+
+
+### 7.2 Visual comparison
+
+In the code chunk below, `plot()` of see package is used to plot a radar chart to compare the performance measures of the models.
+```{r}
+plot(metric)
+```
+>Note:
+The different indices are normalised and larger values indicate better model performance. Hence, points closer to the center indicate worse fit indices.
+**blue is being overlapped by yellow as they have the same stats
+**red is overall better
+
+## 8.0 Visualising model parameters
+```{r}
+ggcoefstats(condo_sb_mlr$model,
+            sort = "ascending")
+```
+
+## 9.0 Checking for multicollinearity
+
+::: panel-tabset
+
+### VIF
+```{r}
+check_collinearity(condo_sb_mlr$model)
+```
+
+### Visualising VIF
+```{r}
+#| fig-width: 12
+#| fig-height: 6
+plot(check_collinearity(condo_sb_mlr$model)) +
+  theme(axis.text.x = element_text(
+    angle = 45, hjust = 1))
+```
+
+:::
+
+## 10.0 Linearity assumption test
+```{r}
+
+```
+
+## 11.0 Normality assumption test
+code chunk below uses `check_normality` of *performance* package to perform normality assumption test.
+```{r}
+plot(check_normality((condo_sb_mlr$model)))
+```
+>Note:
+Figure resemble a normal distribution
+
+## 12.0 Checking of outliers
+
+::: panel-tabset
+
+### Check outlier
+```{r}
+outliers <- check_outliers(condo_sb_mlr$model,
+                           method = "cook")
+outliers
+```
+
+### plot
+```{r}
+plot(check_outliers(condo_sb_mlr$model,
+                           method = "cook"))
+```
+
+## 13.0 Spatial Non-stationary Assumption (Visualising spatial non-stationary)
+
+### 13.1 Step 1
+
+First, we will export the residual of the hendondic pricing model and save it as a data frame.
+```{r}
+mlr_output <- as.data.frame(condo_fw_mlr$model$residuals) %>%
+  rename(`FW_MLR_RES` = `condo_fw_mlr$model$residuals`)
+```
+
+### 13.2 Step 2
+
+
+### 13.2 Step 3
+

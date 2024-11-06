@@ -1,0 +1,240 @@
+---
+title: "Prototyping Modules for Geospatial Analytics Shiny Application [JB: The New Frontier?]"
+subtitle: "Take-home Exercise 03"
+author: "Seah Chi Hao"
+date: 2024-11-02
+date-modified: "last-modified"
+execute:
+  eval: true
+  echo: true
+  freeze: true
+  output: true
+  warning: false
+
+---
+
+## 1.0 Overview
+
+### 1.1 Context
+
+Of late, housing prices in Singapore have been flying through the roof. Because of this, many Singaporeans who yearn for a private space of their own without breaking the bank have been snapping up properties in neighbouring [Johor Bahru, Malaysia](https://en.wikipedia.org/wiki/Johor_Bahru). How high will this drive property prices in the city, perhaps best known among Singaporeans as a cheap and easily accessible weekend shopping getaway? Compared to Singapore, what factors influence the JB property market? Where is each type of housing, catered to different income levels, clustered? And does it matter that JB’s suburbs lack reliable access to public transport? This project aims to find the answers to these lingering questions and more, through a geospatial analysis on the property market of Johor Bahru and its emerging next-door neighbour, [Iskandar Puteri](https://en.wikipedia.org/wiki/Iskandar_Puteri).
+
+### 1.2 Objective(s)
+
+1. Vanilla and Emerging Hot/cold spot analysis on average/median property values for each Mukim in Johor Bahru and Iskandar Puteri (Pulai)
+2. KDE on selected amenity types (e.g. schools, shopping malls, major transport nodes, commercial districts, industrial districts) in Johor Bahru using data scraped from OpenStreetMap
+3. Building a hedonic pricing model for residential properties in Johor Bahru
+
+In this exercise，we will be focusing on building a hedonic pricing model for residential properties in Johor Bahru.
+
+### 1.3 The Data (cleaned and processed)
+```{r}
+#| echo: false
+pacman::p_load(sf, tidyverse, sfdep, tmap, ggstatsplot, olsrr)
+```
+
+#### 1.3.1 Property Transaction Data (Aspatial)
+We got the Property Transaction Data from [Portal Pusat Maklumat Harta Tanah Negara (NAPIC)](https://napic2.jpph.gov.my/ms/data-transaksi)
+
+We filter out the relevant data to get and further processed the data by dropping null values. Ensuring workable property data for us to work with.
+```{r}
+property <- read_rds("data/rds/property_transaction_sf_notnull.rds")
+```
+
+#### 1.3.2 Boundary Data (Geospatial)
+Johor Bahru, Malaysia boundary data can be downloaded and extracted from [geoBoundaries](https://www.geoboundaries.org/simplifiedDownloads.html).
+
+We filtered out the Mukims (aka district/town - alike the 'Toa Payoh', 'Punggol', 'Ang Mo Kio' of Singapore) of Johor Bahru, Malaysia.
+
+- MUKIM BUKIT BATU
+- MUKIM SEDENAK
+- MUKIM KULAI
+- MUKIM TANJUNG KUPANG
+- MUKIM PULAI
+- MUKIM JELUTONG
+- MUKIM SENAI
+- BANDAR KULAI
+- MUKIM TEBRAU
+- BANDAR JOHOR BAHRU
+- MUKIM PLENTONG
+- MUKIM SUNGAI TIRAM
+
+We also dropped did data cleaning by dropping columns that we would not be using.
+
+```{r}
+jb_kulai_bounded <- read_rds("data/rds/jb_kulai_bounded.rds")
+```
+
+### 1.3.3 Point of Interest Data (Geospatial)
+Point of Interest (POI) data can be downloaded from [OpenStreetMap](https://download.geofabrik.de/asia/malaysia-singapore-brunei.html).
+
+From the POI data, we extracted using [OSM Overpass Turbo API](https://overpass-turbo.eu/) to extract out POI that might affect housing prices:
+
+- CUSTOMS_FACILITIES (Only because Singaporeans might consider proximity of houses in JB to the custom when buying a house in JB)
+- COASTLINES
+- WATERFRONTS_AND_BEACHES
+- KINDERGARTENS
+- SCHOOLS
+- UNIVERSITIES_AND_COLLEGES
+- OFFICES,TOWNHALLS
+- POLICE_AND_FIRE_STATIONS
+- HOSPITALS_AND_SPECIALISTS
+- CEMETERY
+- COMMERCIAL
+- INDUSTRIAL
+- PARKS_AND_GREEN_SPACES
+- THEME_PARKS_AND_RESORTS
+- BUDDHIST_TEMPLES
+- CHURCHES
+- HINDU_TEMPLES
+- MOSQUES
+- MARKETPLACE,MALLS
+- RESTAURANT, CAFE, FAST_FOOD
+- SUPERMARKET,CONVENIENCE
+- AIRPORT
+- BUS_STOPS
+- BUS_TERMINALS
+- CARPARKS
+- PETROL_STATIONS
+
+And combining with the `property` and `jb_kulai_bounded` data, we get a `proximity_matrix`, that shows the proximity of the property to each POI.
+```{r}
+proximity_matrix <- read_rds("data/rds/proximity_matrix.rds")
+```
+
+## 2.0 Setup
+In this assignment, four R packages will be used, they are:
+
+- [**sf**](https://r-spatial.github.io/sf/) is use for importing and handling geospatial data in R,
+- [**tidyverse**](https://www.tidyverse.org/) is mainly use for wrangling attribute data in R,
+- [**sfdep**](https://cran.r-project.org/package=sfdep) will be used to compute spatial weights, global and local spatial autocorrelation statistics, and
+- [**tmap**](https://cran.r-project.org/web/packages/tmap/index.html) will be used to prepare cartographic quality chropleth map.
+- [**ggstatsplot**]() will be used for statistical analysis
+- [**olsrr**]() will be used for statistical analysis
+
+
+The following code chunk below is used to install and launch the four R packages.
+```{r}
+pacman::p_load(sf, tidyverse, sfdep, tmap, ggstatsplot, olsrr)
+```
+
+## 3.0 Regression
+
+### 3.1 Simple Linear Regression
+Firstly, let’s build a simple linear regression model with `price_USD` as our dependent variable and `Land/Parcel Area` as our independent variable. To simply test if prices are mainly dependent on the size of the property.
+```{r}
+property_slr <- lm(formula=price_USD ~ `Land/Parcel Area`, data = proximity_matrix)
+summary(property_slr)
+```
+> Note:
+We can see that p-value is very small, hence, it can be concluded that size of the property is significant in determining the price at which the property is sold, which should come at no surprise.
+
+### 3.2 Multiple Linear Regression
+Now, we would like to test if price of properties in JB are affected by the POIs we identified earlier.
+
+```{r}
+property_mlr <- lm(formula=price_USD ~ `Land/Parcel Area` +
+                     PROX_CUSTOMS_FACILITIES + PROX_COASTLINES +
+                     PROX_WATERFRONTS_AND_BEACHES + PROX_KINDERGARTENS +
+                     PROX_SCHOOLS + PROX_UNIVERSITIES_AND_COLLEGES +
+                     `PROX_OFFICES,TOWNHALLS` + PROX_POLICE_AND_FIRE_STATIONS +
+                     PROX_HOSPITALS_AND_SPECIALISTS + PROX_CEMETERY +
+                     PROX_COMMERCIAL + PROX_INDUSTRIAL +
+                     PROX_PARKS_AND_GREEN_SPACES + PROX_THEME_PARKS_AND_RESORTS +
+                     PROX_BUDDHIST_TEMPLES + PROX_CHURCHES +
+                     PROX_HINDU_TEMPLES + PROX_MOSQUES +
+                     `PROX_MARKETPLACE,MALLS` + `PROX_RESTAURANT, CAFE, FAST_FOOD` +
+                     `PROX_SUPERMARKET,CONVENIENCE` + PROX_AIRPORT +
+                     PROX_BUS_STOPS + PROX_BUS_TERMINALS +
+                     PROX_CARPARKS + PROX_PETROL_STATIONS, 
+                   data = proximity_matrix)
+
+summary(property_mlr)
+```
+> Note:
+Taking alpha at 5%, we can see that `PROX_WATERFRONTS_AND_BEACHES`, `PROX_SCHOOLS`, `PROX_UNIVERSITIES_AND_COLLEGES`, `PROX_POLICE_AND_FIRE_STATIONS`, `PROX_HINDU_TEMPLES` and `PROX_RESTAURANT, CAFE, FAST_FOOD` are not statiscally significant. 
+
+
+```{r}
+property_new_mlr <- lm(formula=price_USD ~ `Land/Parcel Area` +
+                     PROX_CUSTOMS_FACILITIES + PROX_COASTLINES +
+                     PROX_KINDERGARTENS + `PROX_OFFICES,TOWNHALLS` + 
+                     PROX_HOSPITALS_AND_SPECIALISTS + PROX_CEMETERY +
+                     PROX_COMMERCIAL + PROX_INDUSTRIAL +
+                     PROX_PARKS_AND_GREEN_SPACES + PROX_THEME_PARKS_AND_RESORTS +
+                     PROX_BUDDHIST_TEMPLES + PROX_CHURCHES +
+                     PROX_MOSQUES + `PROX_MARKETPLACE,MALLS` + 
+                     `PROX_SUPERMARKET,CONVENIENCE` + PROX_AIRPORT +
+                     PROX_BUS_STOPS + PROX_BUS_TERMINALS +
+                     PROX_CARPARKS + PROX_PETROL_STATIONS, 
+                   data = proximity_matrix)
+
+ols_regress(property_new_mlr)
+```
+
+
+## 4.0 Proposed Shiny Application User Interface Storyboard
+After determining the variables that we is affecting the price of JB property for Singaporean buyer. We can start thinking of how the user is able to see the expected prices of the properties, while toggling through different POIs. As everyone look out for different things when buying a property.
+
+![Figure 1: UI Storyboard](picture/UI storyboard.jpg){fig-align="center"}
+
+The user would be able to toggle between District (Mukim), Type of Property and POIs, with the added option of their budget and house area size.
+
+
+::: {.callout-note icon=false collapse="true"}
+## District (Mukim)
+
+- MUKIM BUKIT BATU
+- MUKIM SEDENAK
+- MUKIM KULAI
+- MUKIM TANJUNG KUPANG
+- MUKIM PULAI
+- MUKIM JELUTONG
+- MUKIM SENAI
+- BANDAR KULAI
+- MUKIM TEBRAU
+- BANDAR JOHOR BAHRU
+- MUKIM PLENTONG
+- MUKIM SUNGAI TIRAM
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## Type of Property
+
+- 1 - 1 1/2 Storey Semi-Detached
+- 1 - 1 1/2 Storey Terranced
+- 2 - 2 1/2 Storey Semi-Detached
+- 2 - 2 1/2 Storey Terranced
+- Cluster House
+- Condominium/Apartment
+- Detached
+- Flat
+- Low-Cost Flat
+- Low-cost House
+- Town House
+:::
+
+::: {.callout-note icon=false collapse="true"}
+## POIs options
+
+- CUSTOMS_FACILITIES
+- COASTLINES
+- KINDERGARTENS
+- OFFICES,TOWNHALLS
+- HOSPITALS_AND_SPECIALISTS
+- CEMETERY
+- COMMERCIAL
+- INDUSTRIAL
+- PARKS_AND_GREEN_SPACES
+- THEME_PARKS_AND_RESORTS
+- BUDDHIST_TEMPLES
+- CHURCHES
+- MOSQUES
+- MARKETPLACE,MALLS
+- SUPERMARKET,CONVENIENCE
+- AIRPORT
+- BUS_STOPS
+- BUS_TERMINALS
+- CARPARKS
+- PETROL_STATIONS
+:::
